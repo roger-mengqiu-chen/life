@@ -1,4 +1,5 @@
 from django.contrib import admin
+from import_export.admin import ImportExportModelAdmin
 
 from app.models import (Location, Merchant,
                         TransactionType, Transaction,
@@ -35,7 +36,7 @@ class TransactionCategoryAdmin(admin.ModelAdmin):
 
 
 @admin.register(Transaction)
-class TransactionAdmin(admin.ModelAdmin):
+class TransactionAdmin(ImportExportModelAdmin):
     list_display = ('transaction_time', 'amount', 'transaction_type',
                     'merchant', 'category')
     search_fields = ('transaction_time', 'amount',
