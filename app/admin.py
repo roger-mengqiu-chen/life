@@ -4,6 +4,10 @@ from app.models import (Location, Merchant,
                         TransactionType, Transaction,
                         TransactionCategory, Person, EventType, Event)
 
+admin.site.site_header = "Life"
+admin.site.site_title = "Life"
+admin.site.index_title = "Life"
+
 
 @admin.register(Location)
 class LocationAdmin(admin.ModelAdmin):
