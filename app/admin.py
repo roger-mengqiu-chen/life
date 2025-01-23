@@ -60,7 +60,8 @@ class TransactionSource(resources.ModelResource):
 
     class Meta:
         model = Transaction
-        fields = ('amount', 'transaction_time', 'transaction_type', 'merchant', 'category', )
+        fields = ('amount', 'transaction_time',
+                  'transaction_type', 'merchant', 'category', )
         import_id_fields = []
         skip_unchanged = True
         report_skipped = True
@@ -78,7 +79,9 @@ class TransactionSource(resources.ModelResource):
 
         if transaction_type_name:
             transaction_type_name = transaction_type_name.title()
-            row['transaction_type'], _ = TransactionType.objects.get_or_create(name=transaction_type_name)
+            row['transaction_type'], _ = (
+                TransactionType.objects.get_or_create(name=transaction_type_name)
+            )
 
         if merchant_name:
             merchant_name = self.parse_merchant_name(merchant_name)
@@ -86,7 +89,9 @@ class TransactionSource(resources.ModelResource):
 
         if category_name:
             category_name = category_name.title()
-            row['category'], _ = TransactionCategory.objects.get_or_create(name=category_name)
+            row['category'], _ = (
+                TransactionCategory.objects.get_or_create(name=category_name)
+            )
 
 
 @admin.register(Transaction)
