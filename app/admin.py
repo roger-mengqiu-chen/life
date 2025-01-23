@@ -96,12 +96,16 @@ class TransactionSource(resources.ModelResource):
 
 @admin.register(Transaction)
 class TransactionAdmin(ImportExportModelAdmin):
-    list_display = ('transaction_time', 'amount', 'transaction_type',
+    list_display = ('display_time', 'amount', 'transaction_type',
                     'merchant', 'category')
     search_fields = ('transaction_time', 'amount',
                      'merchant', 'category')
     autocomplete_fields = ('transaction_type', 'category', 'merchant')
     resource_class = TransactionSource
+
+    def display_time(self, obj):
+        return obj.transaction_time.strftime('%Y-%m-%d')
+    display_time.short_description = 'Date'
 
 
 @admin.register(Person)

@@ -75,6 +75,12 @@ class Transaction(models.Model):
     category = models.ForeignKey(TransactionCategory,
                                  on_delete=models.PROTECT)
 
+    def __str__(self):
+        return (f"{self.transaction_time} "
+                f"- {self.merchant.name} "
+                f"- {self.transaction_type.name} "
+                f"- {self.amount}")
+
 
 class Person(models.Model):
     first_name = models.CharField(max_length=100)
