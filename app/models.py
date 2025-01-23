@@ -58,13 +58,16 @@ class TransactionType(models.Model):
 class TransactionCategory(models.Model):
     name = models.CharField(max_length=255)
 
+    class Meta:
+        verbose_name_plural = "Transaction Categories"
+
     def __str__(self):
         return self.name
 
 
 class Transaction(models.Model):
     amount = models.FloatField()
-    transaction_time = models.DateTimeField()
+    transaction_time = models.DateField()
     transaction_type = models.ForeignKey(TransactionType,
                                          on_delete=models.PROTECT)
     merchant = models.ForeignKey(Merchant,

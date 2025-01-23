@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'import_export',
+    'rest_framework',
     'app'
 ]
 
@@ -123,3 +124,10 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+MERCHANTS = {
+    'amazon', 'costco', 'esso', 'steam games', 'home depot', 'sport chek',
+    'shoe warehouse', 'decathlon', 'mazda', 'polo factory store',
+    'longview jerky shop', 'minutekeyvending', 'alberta parks', 'mouser electronics',
+    'petsmart',
+}
