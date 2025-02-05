@@ -24,7 +24,7 @@ class LocationAdmin(admin.ModelAdmin):
 @admin.register(Merchant)
 class MerchantAdmin(admin.ModelAdmin):
     list_display = ('name',)
-    search_fields = ('name', 'website', 'phone', 'email', 'location')
+    search_fields = ('name', 'website', 'phone', 'email', 'location__name')
     ordering = ('name',)
 
 
@@ -95,11 +95,11 @@ class TransactionSource(resources.ModelResource):
 
 
 @admin.register(Transaction)
-class TransactionAdmin(ImportExportModelAdmin):
+class TransactionAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     list_display = ('display_time', 'amount', 'transaction_type',
                     'merchant', 'category')
     search_fields = ('transaction_time', 'amount',
-                     'merchant', 'category')
+                     'merchant__name', 'category__name')
     autocomplete_fields = ('transaction_type', 'category', 'merchant')
     resource_class = TransactionSource
 
@@ -111,7 +111,7 @@ class TransactionAdmin(ImportExportModelAdmin):
 @admin.register(Person)
 class PersonAdmin(admin.ModelAdmin):
     list_display = ('first_name', 'last_name', 'merchant', 'gender')
-    search_fields = ('first_name', 'last_name', 'merchant__name', 'gender')
+    search_fields = ('first_name', 'last_name', 'merchant__name', 'gender__name')
 
 
 @admin.register(EventType)
@@ -123,5 +123,5 @@ class EventTypeAdmin(admin.ModelAdmin):
 @admin.register(Event)
 class EventAdmin(admin.ModelAdmin):
     list_display = ('event_time', 'event_type', 'name', 'location')
-    search_fields = ('event_time', 'event_type', 'name', 'location__city',
+    search_fields = ('event_time', 'event_type__name', 'name', 'location__city',
                      'location__state', 'location__country')
