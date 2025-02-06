@@ -3,6 +3,7 @@ from django.contrib import admin
 from import_export import resources, fields
 from import_export.admin import ImportExportModelAdmin
 from import_export.widgets import ForeignKeyWidget
+from datetime import datetime
 
 from app.models import (Location, Merchant,
                         TransactionType, Transaction,
@@ -68,14 +69,23 @@ class TransactionSource(resources.ModelResource):
 
     def parse_merchant_name(self, name):
         for merchant in settings.MERCHANTS:
-            if merchant in name.lower():
+            if merchant.lower() in name.lower():
                 return merchant.title()
         return name
 
     def before_import_row(self, row, **kwargs):
         transaction_type_name = row.get('transaction_type', None)
+        transaction_time_str = row.get('transaction_time', None)
         merchant_name = row.get('merchant', None)
         category_name = row.get('category', None)
+
+        if transaction_time_str:
+            for fmt in settings.TRANSACTION_TIME_FORMAT:
+                try:
+                    transaction_time = datetime.strptime(transaction_time_str, fmt)
+                    row['transaction_time'] = transaction_time
+                except ValueError:
+                    pass
 
         if transaction_type_name:
             transaction_type_name = transaction_type_name.title()
@@ -102,6 +112,7 @@ class TransactionAdmin(ImportExportModelAdmin, admin.ModelAdmin):
                      'merchant__name', 'category__name')
     autocomplete_fields = ('transaction_type', 'category', 'merchant')
     resource_class = TransactionSource
+    ordering = ('transaction_time', )
 
     def display_time(self, obj):
         return obj.transaction_time.strftime('%Y-%m-%d')

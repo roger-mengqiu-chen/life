@@ -129,5 +129,10 @@ MERCHANTS = {
     'amazon', 'costco', 'esso', 'steam games', 'home depot', 'sport chek',
     'shoe warehouse', 'decathlon', 'mazda', 'polo factory store',
     'longview jerky shop', 'minutekeyvending', 'alberta parks', 'mouser electronics',
-    'petsmart',
+    'petsmart', 'T&T', 'ROGERS', 'purebread yvr', 'wow chicken', 'triple o\'s',
+    'tokyo street market', 'jollibee', 'koodo mobile', 'enmax energy', 'telus comm',
+    'NIUBEST HAND-PULLED NOODL', 'A&W', 'EFT CREDIT TPS/GST', 'PROPERTY TAXES', 'PERSONAL LOANS',
+    'PAYROLL DEPOSIT', 'REMISE CARBONE/CARBON REBATE', 'OREILLY', 'LYFT', 'ATM DEPOSIT'
 }
+
+TRANSACTION_TIME_FORMAT = ('%Y-%m-%d', )
