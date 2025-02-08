@@ -23,8 +23,8 @@ class Location(models.Model):
         verbose_name_plural = "Location"
 
     def __str__(self):
-        return (f'{self.street_no} {self.street_name} {self.city} '
-                f'{self.state} {self.country}')
+        return (f'{self.street_no or ""} {self.street_name or ""} {self.city}, '
+                f'{self.state}, {self.country}')
 
 
 class Merchant(models.Model):
@@ -103,6 +103,11 @@ class Person(models.Model):
 
 class EventType(models.Model):
     name = models.CharField(max_length=255)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['name'], name='unique_event_name'),
+        ]
 
     def __str__(self):
         return self.name
