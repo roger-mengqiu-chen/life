@@ -7,7 +7,7 @@ from datetime import datetime
 
 from app.models import (Location, Merchant,
                         TransactionType, Transaction,
-                        TransactionCategory, Person, EventType, Event)
+                        TransactionCategory, Person, EventType, Event, Gender)
 
 admin.site.site_header = "Life"
 admin.site.site_title = "Life"
@@ -33,6 +33,7 @@ class MerchantAdmin(admin.ModelAdmin):
 class TransactionTypeAdmin(admin.ModelAdmin):
     list_display = ('name',)
     search_fields = ('name',)
+    ordering = ('name',)
 
 
 @admin.register(TransactionCategory)
@@ -119,10 +120,18 @@ class TransactionAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     display_time.short_description = 'Date'
 
 
+@admin.register(Gender)
+class GenderAdmin(admin.ModelAdmin):
+    list_display = ('name',)
+    search_fields = ('name',)
+    ordering = ('name',)
+
+
 @admin.register(Person)
 class PersonAdmin(admin.ModelAdmin):
     list_display = ('first_name', 'last_name', 'merchant', 'gender')
     search_fields = ('first_name', 'last_name', 'merchant__name', 'gender__name')
+    ordering = ('first_name', 'last_name')
 
 
 @admin.register(EventType)
@@ -133,6 +142,8 @@ class EventTypeAdmin(admin.ModelAdmin):
 
 @admin.register(Event)
 class EventAdmin(admin.ModelAdmin):
-    list_display = ('event_time', 'event_type', 'name', 'location')
+    list_display = ('event_time', 'event_type', 'name', 'location', 'passed_time')
     search_fields = ('event_time', 'event_type__name', 'name', 'location__city',
                      'location__state', 'location__country')
+    autocomplete_fields = ('event_type', 'location')
+    ordering = ('-event_time', )

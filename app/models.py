@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 
 
 class Gender(models.Model):
@@ -23,8 +24,8 @@ class Location(models.Model):
         verbose_name_plural = "Location"
 
     def __str__(self):
-        return (f'{self.street_no or ""} {self.street_name or ""} {self.city}, '
-                f'{self.state}, {self.country}')
+        return (f'{self.name or ""} {self.street_no or ""} {self.street_name or ""} '
+                f'{self.city}, {self.state or ""}, {self.country}')
 
 
 class Merchant(models.Model):
@@ -123,3 +124,10 @@ class Event(models.Model):
     notes = models.TextField(blank=True,
                              null=True)
     people = models.ManyToManyField(Person)
+
+    def __str__(self):
+        return self.name
+
+    def passed_time(self):
+        now = timezone.now()
+        return now - self.event_time
