@@ -130,4 +130,15 @@ class Event(models.Model):
 
     def passed_time(self):
         now = timezone.now()
-        return now - self.event_time
+        delta = now - self.event_time
+        total_days = delta.days
+        years = total_days // 365
+        months = (total_days % 365) // 30
+        days = (total_days % 365) % 30
+        result = ""
+        if years > 0:
+            result += f"{years} years "
+        if months > 0:
+            result += f"{months} months "
+        result += f"{days} days "
+        return result.strip()
