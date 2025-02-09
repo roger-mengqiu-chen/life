@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils import timezone
 from django.utils.html import format_html
+from datetime import datetime
 
 
 class Gender(models.Model):
@@ -110,13 +111,13 @@ class Account(models.Model):
 
 
 class History(models.Model):
-    date = models.DateField(auto_now=True)
+    date = models.DateField(auto_now=True, unique=True)
 
     class Meta:
         verbose_name_plural = "Histories"
 
     def __str__(self):
-        return self.date
+        return datetime.strftime(self.date, "%Y-%m-%d")
 
 
 class AccountHistory(models.Model):
@@ -126,6 +127,9 @@ class AccountHistory(models.Model):
 
     class Meta:
         unique_together = ('account', 'history')
+
+    def __str__(self):
+        return self.account.name
 
 
 class Person(models.Model):
