@@ -112,6 +112,9 @@ class Account(models.Model):
 class History(models.Model):
     date = models.DateField()
 
+    class Meta:
+        verbose_name_plural = "Histories"
+
     def __str__(self):
         return self.date
 
