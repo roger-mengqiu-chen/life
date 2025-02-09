@@ -5,11 +5,13 @@ from import_export import resources, fields
 from import_export.admin import ImportExportModelAdmin
 from import_export.widgets import ForeignKeyWidget
 from datetime import datetime
+from django.contrib.humanize.templatetags.humanize import intcomma
 
 from app.models import (Location, Merchant,
                         TransactionType, Transaction,
-                        TransactionCategory, Person, EventType, Event, Gender, Account, AccountType, AccountHistory,
-                        History)
+                        TransactionCategory, Person, EventType,
+                        Event, Gender, Account, AccountType,
+                        AccountHistory, History)
 
 admin.site.site_header = "Life"
 admin.site.site_title = "Life"
@@ -119,13 +121,18 @@ class TransactionSource(resources.ModelResource):
 
 @admin.register(Transaction)
 class TransactionAdmin(ImportExportModelAdmin, admin.ModelAdmin):
-    list_display = ('display_time', 'amount', 'transaction_type',
+    list_display = ('display_time', 'displayed_amount', 'transaction_type',
                     'merchant', 'category')
     search_fields = ('transaction_time', 'amount',
                      'merchant__name', 'category__name')
     autocomplete_fields = ('transaction_type', 'category', 'merchant')
     resource_class = TransactionSource
     ordering = ('transaction_time', )
+
+    def displayed_amount(self, obj):
+        return intcomma(obj.amount)
+    displayed_amount.short_description = 'Amount'
+    displayed_amount.admin_order_field = 'amount'
 
     def display_time(self, obj):
         return obj.transaction_time.strftime('%Y-%m-%d')
@@ -167,7 +174,12 @@ class AccountHistoryInline(admin.StackedInline):
 @admin.register(History)
 class HistoryAdmin(admin.ModelAdmin):
     inlines = (AccountHistoryInline, )
-    list_display = ('date', 'sum')
+    list_display = ('date', 'total')
+
+    def total(self, obj):
+        return intcomma(obj.sum)
+    total.short_description = 'Total'
+    total.admin_order_field = 'sum'
 
     def save_model(self, request, obj, form, change):
         obj.calculate_sum()
