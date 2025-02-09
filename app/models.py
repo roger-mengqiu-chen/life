@@ -110,7 +110,7 @@ class Account(models.Model):
 
 
 class History(models.Model):
-    date = models.DateField()
+    date = models.DateField(auto_now=True)
 
     class Meta:
         verbose_name_plural = "Histories"
