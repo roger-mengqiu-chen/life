@@ -121,7 +121,7 @@ class History(models.Model):
 
 class AccountHistory(models.Model):
     account = models.ForeignKey(Account, on_delete=models.PROTECT)
-    history = models.ForeignKey(History, on_delete=models.PROTECT)
+    history = models.ForeignKey(History, on_delete=models.CASCADE)
     account_amount = models.FloatField(default=0)
 
     class Meta:
