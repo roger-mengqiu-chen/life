@@ -12,6 +12,7 @@ from app.models import (Location, Merchant,
                         TransactionCategory, Person, EventType,
                         Event, Gender, Account, AccountType,
                         AccountHistory, History)
+from app.services import get_last_month_trans_df, calculate_expense, calculate_income
 
 admin.site.site_header = "Life"
 admin.site.site_title = "Life"
@@ -128,6 +129,7 @@ class TransactionAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     autocomplete_fields = ('transaction_type', 'category', 'merchant')
     resource_class = TransactionSource
     ordering = ('transaction_time', )
+    change_list_template = 'admin/app/transaction/change_list.html'
 
     def displayed_amount(self, obj):
         return intcomma(obj.amount)
@@ -137,6 +139,16 @@ class TransactionAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     def display_time(self, obj):
         return obj.transaction_time.strftime('%Y-%m-%d')
     display_time.short_description = 'Date'
+
+    def changelist_view(self, request, extra_context=None):
+        extra_context = extra_context or {}
+        df = get_last_month_trans_df()
+        expense = calculate_expense(df)
+        income = calculate_income(df)
+        extra_context['expense'] = expense
+        extra_context['income'] = income
+
+        return super(TransactionAdmin, self).changelist_view(request, extra_context)
 
 
 @admin.register(AccountType)

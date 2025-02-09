@@ -1,0 +1,107 @@
+{% extends "admin/change_list.html" %}
+
+{% block content %}
+    <h1>Cash Flow</h1>
+    <h2 id="cashFlow"></h2>
+    <div style="display: block;
+                box-sizing: border-box;
+                height: 800px;
+                width: 800px;">
+        <canvas id="myExpenseChart"></canvas>
+    </div>
+    <div style="display: block;
+                box-sizing: border-box;
+                height: 800px;
+                width: 800px">
+        <canvas id="myIncomeChart"></canvas>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+    <script>
+        const ctx = document.getElementById('myExpenseChart');
+
+        let expenses = "{{ expense|safe }}".replace(/'/g, '"');
+        let incomes = "{{ income|safe }}".replace(/'/g, '"');
+        let expense_data = JSON.parse(expenses);
+        let income_data = JSON.parse(incomes);
+
+        let expense_x = expense_data.map(item => item["category"]);
+        let expense_y = expense_data.map(item => item["amount"]);
+        let total_expense = expense_y.reduce((sum, val) => sum + val, 0);
+        let expense_color = expense_data.map(item => item["color"]);
+        let expense_chart_data = {
+            labels: expense_x,
+            datasets: [{
+                data: expense_y,
+                backgroundcolor: expense_color
+            }]
+        }
+
+        let income_x = income_data.map(item => item["category"]);
+        let income_y = income_data.map(item => item["amount"]);
+        let total_income = income_y.reduce((sum, val) => sum + val, 0);
+        let income_color = income_data.map(item => item["color"]);
+        let income_chart_data = {
+            labels: income_x,
+            datasets: [{
+                data: income_y,
+                backgroundcolor: income_color
+            }]
+        };
+
+        let cashFlow = document.getElementById("cashFlow");
+        cashFlow.innerText = (total_income - total_expense).toFixed(2);
+
+        new Chart(ctx, {
+            type: 'pie',
+            data: expense_chart_data,
+            options: {
+            plugins: {
+                datalabels: {
+                    color: 'black', // Label text color
+                    formatter: (value, context) => {
+                        let percentage = ((value / total_expense) * 100).toFixed(1) + "%";
+                        return percentage;
+                    },
+                    font: {
+                        weight: 'bold',
+                        size: 14
+                    }
+                }
+            }
+        },
+        plugins: [ChartDataLabels]
+        });
+
+        const income_ctx = document.getElementById('myIncomeChart');
+        new Chart(income_ctx, {
+            type: 'pie',
+            data: income_chart_data,
+            options: {
+            plugins: {
+                datalabels: {
+                    color: 'black', // Label text color
+                    formatter: (value, context) => {
+                        let percentage = ((value / total_income) * 100).toFixed(1) + "%";
+                        return percentage;
+                    },
+                    font: {
+                        weight: 'bold',
+                        size: 14
+                    }
+                }
+            }
+        },
+        plugins: [ChartDataLabels]
+        });
+
+    </script>
+
+    <div>&nbsp;</div>
+    <div>&nbsp;</div>
+    <div>&nbsp;</div>
+    <div>&nbsp;</div>
+
+    {{ block.super }}
+  
+{% endblock %}

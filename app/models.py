@@ -135,7 +135,8 @@ class History(models.Model):
         return total
 
     def calculate_wire_transfer(self):
-        wire_transfer = Transaction.objects.filter(transaction_type__name__iexact='wire transfer')
+        wire_transfer = Transaction.objects.filter(
+            transaction_type__name__iexact='wire transfer')
         total = 0
         for wire_transfer in wire_transfer:
             total += wire_transfer.amount
