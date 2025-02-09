@@ -124,6 +124,9 @@ class AccountHistory(models.Model):
     history = models.ForeignKey(History, on_delete=models.PROTECT)
     account_amount = models.FloatField(default=0)
 
+    class Meta:
+        unique_together = ('account', 'history')
+
 
 class Person(models.Model):
     first_name = models.CharField(max_length=100)
