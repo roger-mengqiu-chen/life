@@ -105,6 +105,9 @@ class Account(models.Model):
     account_no = models.IntegerField(null=True, blank=True)
     type = models.ForeignKey(AccountType, on_delete=models.PROTECT)
 
+    def __str__(self):
+        return self.name
+
 
 class AccountHistory(models.Model):
     account = models.ForeignKey(Account, on_delete=models.PROTECT)

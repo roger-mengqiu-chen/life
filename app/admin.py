@@ -8,7 +8,7 @@ from datetime import datetime
 
 from app.models import (Location, Merchant,
                         TransactionType, Transaction,
-                        TransactionCategory, Person, EventType, Event, Gender, Account)
+                        TransactionCategory, Person, EventType, Event, Gender, Account, AccountType)
 
 admin.site.site_header = "Life"
 admin.site.site_title = "Life"
@@ -131,10 +131,17 @@ class TransactionAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     display_time.short_description = 'Date'
 
 
+@admin.register(AccountType)
+class AccountTypeAdmin(admin.ModelAdmin):
+    list_display = ('name',)
+    search_fields = ('name',)
+
+
 @admin.register(Account)
 class AccountAdmin(admin.ModelAdmin):
-    list_display = ('name', 'account_no')
-    search_fields = ('name', 'account_no')
+    list_display = ('name', 'account_no', 'type')
+    search_fields = ('name', 'account_no', 'type__name')
+    autocomplete_fields = ('type',)
     ordering = ('name', )
 
 
