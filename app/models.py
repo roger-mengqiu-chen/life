@@ -113,6 +113,7 @@ class Account(models.Model):
 class History(models.Model):
     date = models.DateField(auto_now=True, unique=True)
     sum = models.FloatField(default=0, blank=True)
+    wire_transfer_sum = models.FloatField(default=0, blank=True)
 
     class Meta:
         verbose_name_plural = "Histories"
@@ -126,6 +127,14 @@ class History(models.Model):
         for account_history in account_histories:
             total += account_history.account_amount
         self.sum = total
+        return total
+
+    def calculate_wire_transfer(self):
+        wire_transfer = Transaction.objects.filter(transaction_type__name__iexact='wire transfer')
+        total = 0
+        for wire_transfer in wire_transfer:
+            total += wire_transfer.amount
+        self.wire_transfer_sum = total
         return total
 
 
