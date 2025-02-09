@@ -174,15 +174,26 @@ class AccountHistoryInline(admin.StackedInline):
 @admin.register(History)
 class HistoryAdmin(admin.ModelAdmin):
     inlines = (AccountHistoryInline, )
-    list_display = ('date', 'total')
+    list_display = ('date', 'total', 'wire_transfer_total', 'investment_total')
 
     def total(self, obj):
         return intcomma(obj.sum)
     total.short_description = 'Total'
     total.admin_order_field = 'sum'
 
+    def wire_transfer_total(self, obj):
+        return intcomma(obj.wire_transfer_sum)
+    wire_transfer_total.admin_order_field = 'wire_transfer_sum'
+    wire_transfer_total.short_description = 'Wire Transfer Total'
+
+    def investment_total(self, obj):
+        return intcomma(obj.investment_sum)
+    investment_total.admin_order_field = 'investment_sum'
+    investment_total.short_description = 'Investment Total'
+
     def save_model(self, request, obj, form, change):
         obj.calculate_sum()
+        obj.calculate_wire_transfer()
         obj.save()
 
 

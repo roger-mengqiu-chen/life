@@ -114,6 +114,7 @@ class History(models.Model):
     date = models.DateField(auto_now=True, unique=True)
     sum = models.FloatField(default=0, blank=True)
     wire_transfer_sum = models.FloatField(default=0, blank=True)
+    investment_sum = models.FloatField(default=0, blank=True)
 
     class Meta:
         verbose_name_plural = "Histories"
@@ -124,9 +125,13 @@ class History(models.Model):
     def calculate_sum(self):
         account_histories = self.accounthistory_set.all()
         total = 0
+        investment_total = 0
         for account_history in account_histories:
             total += account_history.account_amount
+            if account_history.account.type.name.lower() == 'investment':
+                investment_total += account_history.account_amount
         self.sum = total
+        self.investment_sum = investment_total
         return total
 
     def calculate_wire_transfer(self):
