@@ -58,6 +58,7 @@ class TransactionType(models.Model):
 
 class TransactionCategory(models.Model):
     name = models.CharField(max_length=255)
+    color = models.CharField(max_length=255, null=True, blank=True)
 
     class Meta:
         verbose_name_plural = "Transaction Categories"
