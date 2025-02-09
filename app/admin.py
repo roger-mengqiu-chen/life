@@ -8,7 +8,7 @@ from datetime import datetime
 
 from app.models import (Location, Merchant,
                         TransactionType, Transaction,
-                        TransactionCategory, Person, EventType, Event, Gender)
+                        TransactionCategory, Person, EventType, Event, Gender, Account)
 
 admin.site.site_header = "Life"
 admin.site.site_title = "Life"
@@ -129,6 +129,13 @@ class TransactionAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     def display_time(self, obj):
         return obj.transaction_time.strftime('%Y-%m-%d')
     display_time.short_description = 'Date'
+
+
+@admin.register(Account)
+class AccountAdmin(admin.ModelAdmin):
+    list_display = ('name', 'account_no')
+    search_fields = ('name', 'account_no')
+    ordering = ('name', )
 
 
 @admin.register(Gender)
