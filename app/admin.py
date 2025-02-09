@@ -1,6 +1,6 @@
 from django.conf import settings
 from django.contrib import admin
-from django.forms import ModelForm, TextInput
+from django.forms import ModelForm, TextInput, BaseInlineFormSet
 from import_export import resources, fields
 from import_export.admin import ImportExportModelAdmin
 from import_export.widgets import ForeignKeyWidget
@@ -8,7 +8,8 @@ from datetime import datetime
 
 from app.models import (Location, Merchant,
                         TransactionType, Transaction,
-                        TransactionCategory, Person, EventType, Event, Gender, Account, AccountType)
+                        TransactionCategory, Person, EventType, Event, Gender, Account, AccountType, AccountHistory,
+                        History)
 
 admin.site.site_header = "Life"
 admin.site.site_title = "Life"
@@ -143,6 +144,30 @@ class AccountAdmin(admin.ModelAdmin):
     search_fields = ('name', 'account_no', 'type__name')
     autocomplete_fields = ('type',)
     ordering = ('name', )
+
+
+class AccountHistoryInlineFormSet(BaseInlineFormSet):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        if self.instance.pk is None:
+            self.instance.save()
+            all_accounts = Account.objects.all()
+            for account in all_accounts:
+                AccountHistory.objects.create(account=account, history=self.instance)
+
+
+class AccountHistoryInline(admin.StackedInline):
+    model = AccountHistory
+    extra = 0
+    can_delete = False
+    formset = AccountHistoryInlineFormSet
+
+
+@admin.register(History)
+class HistoryAdmin(admin.ModelAdmin):
+    inlines = (AccountHistoryInline, )
+    list_display = ('date', )
 
 
 @admin.register(Gender)
