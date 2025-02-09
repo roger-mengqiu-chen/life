@@ -109,9 +109,16 @@ class Account(models.Model):
         return self.name
 
 
+class History(models.Model):
+    date = models.DateField()
+
+    def __str__(self):
+        return self.date
+
+
 class AccountHistory(models.Model):
     account = models.ForeignKey(Account, on_delete=models.PROTECT)
-    record_date = models.DateField(auto_now=True)
+    history = models.ForeignKey(History, on_delete=models.PROTECT)
     account_amount = models.FloatField(default=0)
 
 
