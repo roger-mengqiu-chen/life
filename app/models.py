@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils import timezone
+from django.utils.html import format_html
 
 
 class Gender(models.Model):
@@ -65,6 +66,14 @@ class TransactionCategory(models.Model):
 
     def __str__(self):
         return self.name
+
+    def show_color(self):
+        if self.color is not None or self.color != '':
+            return format_html(
+                f'<span style="color:{self.color}">&#x25A0;</span>'
+            )
+        else:
+            return ''
 
 
 class Transaction(models.Model):

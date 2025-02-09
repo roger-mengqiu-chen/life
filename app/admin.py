@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.contrib import admin
+from django.forms import ModelForm, TextInput
 from import_export import resources, fields
 from import_export.admin import ImportExportModelAdmin
 from import_export.widgets import ForeignKeyWidget
@@ -29,6 +30,15 @@ class MerchantAdmin(admin.ModelAdmin):
     ordering = ('name',)
 
 
+class CategoryForm(ModelForm):
+    class Meta:
+        model = TransactionCategory
+        fields = '__all__'
+        widgets = {
+            'color': TextInput(attrs={'type': 'color'}),
+        }
+
+
 @admin.register(TransactionType)
 class TransactionTypeAdmin(admin.ModelAdmin):
     list_display = ('name',)
@@ -38,7 +48,8 @@ class TransactionTypeAdmin(admin.ModelAdmin):
 
 @admin.register(TransactionCategory)
 class TransactionCategoryAdmin(admin.ModelAdmin):
-    list_display = ('name',)
+    form = CategoryForm
+    list_display = ('name', 'show_color')
     search_fields = ('name',)
 
 
