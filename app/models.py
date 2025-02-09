@@ -93,6 +93,17 @@ class Transaction(models.Model):
                 f"- {self.amount}")
 
 
+class Account(models.Model):
+    name = models.CharField(max_length=255)
+    account_no = models.IntegerField(null=True, blank=True)
+
+
+class AccountHistory(models.Model):
+    account = models.ForeignKey(Account, on_delete=models.PROTECT)
+    record_date = models.DateField()
+    account_amount = models.FloatField()
+
+
 class Person(models.Model):
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100,
