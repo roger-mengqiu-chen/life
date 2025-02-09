@@ -111,7 +111,7 @@ class Account(models.Model):
 
 class AccountHistory(models.Model):
     account = models.ForeignKey(Account, on_delete=models.PROTECT)
-    record_date = models.DateField()
+    record_date = models.DateField(auto_now=True)
     account_amount = models.FloatField()
 
 
