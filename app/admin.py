@@ -167,7 +167,11 @@ class AccountHistoryInline(admin.StackedInline):
 @admin.register(History)
 class HistoryAdmin(admin.ModelAdmin):
     inlines = (AccountHistoryInline, )
-    list_display = ('date', )
+    list_display = ('date', 'sum')
+
+    def save_model(self, request, obj, form, change):
+        obj.calculate_sum()
+        obj.save()
 
 
 @admin.register(Gender)

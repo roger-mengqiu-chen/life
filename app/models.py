@@ -112,12 +112,21 @@ class Account(models.Model):
 
 class History(models.Model):
     date = models.DateField(auto_now=True, unique=True)
+    sum = models.FloatField(default=0, blank=True)
 
     class Meta:
         verbose_name_plural = "Histories"
 
     def __str__(self):
         return datetime.strftime(self.date, "%Y-%m-%d")
+
+    def calculate_sum(self):
+        account_histories = self.accounthistory_set.all()
+        total = 0
+        for account_history in account_histories:
+            total += account_history.account_amount
+        self.sum = total
+        return total
 
 
 class AccountHistory(models.Model):
