@@ -94,6 +94,19 @@ class Transaction(models.Model):
                 f"- {self.amount}")
 
 
+class Report(models.Model):
+    date = models.DateField()
+    total_expense = models.FloatField(default=0, blank=True)
+    total_income = models.FloatField(default=0, blank=True)
+
+
+class ReportLine(models.Model):
+    report = models.ForeignKey(Report, on_delete=models.CASCADE)
+    category = models.ForeignKey(TransactionCategory, on_delete=models.PROTECT)
+    amount = models.FloatField(default=0, blank=True)
+    percentage = models.FloatField(default=0, blank=True)
+
+
 class AccountType(models.Model):
     name = models.CharField(max_length=255, unique=True)
 
