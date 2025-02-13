@@ -186,7 +186,7 @@ class AccountHistoryInline(admin.StackedInline):
 @admin.register(History)
 class HistoryAdmin(admin.ModelAdmin):
     inlines = (AccountHistoryInline, )
-    list_display = ('date', 'total', 'wire_transfer_total', 'investment_total')
+    list_display = ('date', 'total', 'wire_transfer_total', 'investment_total', 'existing_total')
 
     def total(self, obj):
         return intcomma(obj.sum)
@@ -202,6 +202,11 @@ class HistoryAdmin(admin.ModelAdmin):
         return intcomma(obj.investment_sum)
     investment_total.admin_order_field = 'investment_sum'
     investment_total.short_description = 'Investment Total'
+
+    def existing_total(self, obj):
+        return intcomma(obj.existing_sum)
+    existing_total.admin_order_field = 'existing_sum'
+    existing_total.short_description = 'Existing Total'
 
     def save_model(self, request, obj, form, change):
         obj.calculate_sum()

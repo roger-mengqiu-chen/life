@@ -128,6 +128,7 @@ class History(models.Model):
     sum = models.FloatField(default=0, blank=True)
     wire_transfer_sum = models.FloatField(default=0, blank=True)
     investment_sum = models.FloatField(default=0, blank=True)
+    existing_sum = models.FloatField(default=0, blank=True)
 
     class Meta:
         verbose_name_plural = "Histories"
@@ -139,12 +140,18 @@ class History(models.Model):
         account_histories = self.accounthistory_set.all()
         total = 0
         investment_total = 0
+        car_house = 0
         for account_history in account_histories:
             total += account_history.account_amount
             if account_history.account.type.name.lower() == 'investment':
                 investment_total += account_history.account_amount
-        self.sum = total
-        self.investment_sum = investment_total
+
+            if (account_history.account.name.lower() == 'car'
+                or account_history.account.name.lower() == 'house'):
+                car_house += account_history.account_amount
+        self.sum = round(total, 2)
+        self.investment_sum = round(investment_total, 2)
+        self.existing_sum = round(total - car_house, 2)
         return total
 
     def calculate_wire_transfer(self):
@@ -153,7 +160,7 @@ class History(models.Model):
         total = 0
         for wire_transfer in wire_transfer:
             total += wire_transfer.amount
-        self.wire_transfer_sum = total
+        self.wire_transfer_sum = round(total, 2)
         return total
 
 
