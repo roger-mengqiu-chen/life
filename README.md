@@ -9,3 +9,5 @@ This is a Django app that tracks life events and financial situations.
 Once cloned, install the requirements with `pip install -r requirements.txt`.
 
 Then, run ./run.ps1 on windows. 
+
+The server will run on localhost:8000.
