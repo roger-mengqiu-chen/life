@@ -239,5 +239,5 @@ class EventAdmin(admin.ModelAdmin):
     list_display = ('event_time', 'event_type', 'name', 'location', 'passed_time')
     search_fields = ('event_time', 'event_type__name', 'name', 'location__city',
                      'location__state', 'location__country')
-    autocomplete_fields = ('event_type', 'location')
+    autocomplete_fields = ('event_type', 'location', 'people')
     ordering = ('-event_time', )
