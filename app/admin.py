@@ -139,6 +139,7 @@ class TransactionAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     def display_time(self, obj):
         return obj.transaction_time.strftime('%Y-%m-%d')
     display_time.short_description = 'Date'
+    display_time.admin_order_field = 'transaction_time'
 
     def changelist_view(self, request, extra_context=None):
         extra_context = extra_context or {}
