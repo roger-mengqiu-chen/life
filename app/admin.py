@@ -171,10 +171,28 @@ class AccountHistoryInlineFormSet(BaseInlineFormSet):
         super().__init__(*args, **kwargs)
 
         if self.instance.pk is None:
-            self.instance.save()
             all_accounts = Account.objects.all()
+            initial_data = []
             for account in all_accounts:
-                AccountHistory.objects.create(account=account, history=self.instance)
+                initial_data.append({'account': account})
+            self.initial = initial_data
+            self.extra = len(initial_data)
+
+    def save_new(self, form, commit=True):
+        # Assign the history instance to each new form entry
+        obj = form.save(commit=False)
+        obj.history = self.instance
+        if commit:
+            obj.save()
+        return obj
+
+    def save_existing(self, form, instance, commit=True):
+        # Update existing entries (not needed in this case, but for completeness)
+        obj = form.save(commit=False)
+        obj.history = self.instance
+        if commit:
+            obj.save()
+        return obj
 
 
 class AccountHistoryInline(admin.TabularInline):
@@ -210,9 +228,14 @@ class HistoryAdmin(admin.ModelAdmin):
     existing_total.short_description = 'Existing Total'
 
     def save_model(self, request, obj, form, change):
-        obj.calculate_sum()
-        obj.calculate_wire_transfer()
-        obj.save()
+        super().save_model(request, obj, form, change)
+
+    def save_formset(self, request, form, formset, change):
+        formset.save()  # Save AccountHistory objects first
+        if isinstance(formset, AccountHistoryInlineFormSet):
+            form.instance.calculate_sum()
+            form.instance.calculate_wire_transfer()
+            form.instance.save()
 
 
 @admin.register(Gender)
