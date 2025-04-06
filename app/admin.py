@@ -128,7 +128,7 @@ class TransactionAdmin(ImportExportModelAdmin, admin.ModelAdmin):
                      'merchant__name', 'category__name')
     autocomplete_fields = ('transaction_type', 'category', 'merchant')
     resource_class = TransactionSource
-    ordering = ('transaction_time', )
+    ordering = ('-transaction_time', )
     change_list_template = 'admin/app/transaction/change_list.html'
 
     def displayed_amount(self, obj):
@@ -177,7 +177,7 @@ class AccountHistoryInlineFormSet(BaseInlineFormSet):
                 AccountHistory.objects.create(account=account, history=self.instance)
 
 
-class AccountHistoryInline(admin.StackedInline):
+class AccountHistoryInline(admin.TabularInline):
     model = AccountHistory
     extra = 0
     can_delete = False
