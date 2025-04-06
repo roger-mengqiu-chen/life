@@ -1,22 +1,15 @@
+from datetime import datetime
+
 from django.conf import settings
 from django.contrib import admin
-from django.forms import ModelForm, TextInput, BaseInlineFormSet
+from django.contrib.humanize.templatetags.humanize import intcomma
+from django.forms import ModelForm, TextInput
 from import_export import resources, fields
 from import_export.admin import ImportExportModelAdmin
 from import_export.widgets import ForeignKeyWidget
-from datetime import datetime
-from django.contrib.humanize.templatetags.humanize import intcomma
 
-from app.models import (Location, Merchant,
-                        TransactionType, Transaction,
-                        TransactionCategory, Person, EventType,
-                        Event, Gender, Account, AccountType,
-                        AccountHistory, History)
+from app.models import TransactionType, TransactionCategory, Merchant, Transaction, Location
 from app.services import get_last_month_trans_df, calculate_expense, calculate_income
-
-admin.site.site_header = "Life"
-admin.site.site_title = "Life"
-admin.site.index_title = "Life"
 
 
 @admin.register(Location)
@@ -150,120 +143,3 @@ class TransactionAdmin(ImportExportModelAdmin, admin.ModelAdmin):
         extra_context['income'] = income
 
         return super(TransactionAdmin, self).changelist_view(request, extra_context)
-
-
-@admin.register(AccountType)
-class AccountTypeAdmin(admin.ModelAdmin):
-    list_display = ('name',)
-    search_fields = ('name',)
-
-
-@admin.register(Account)
-class AccountAdmin(admin.ModelAdmin):
-    list_display = ('name', 'account_no', 'type')
-    search_fields = ('name', 'account_no', 'type__name')
-    autocomplete_fields = ('type',)
-    ordering = ('name', )
-
-
-class AccountHistoryInlineFormSet(BaseInlineFormSet):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-        if self.instance.pk is None:
-            all_accounts = Account.objects.all()
-            initial_data = []
-            for account in all_accounts:
-                initial_data.append({'account': account})
-            self.initial = initial_data
-            self.extra = len(initial_data)
-
-    def save_new(self, form, commit=True):
-        # Assign the history instance to each new form entry
-        obj = form.save(commit=False)
-        obj.history = self.instance
-        if commit:
-            obj.save()
-        return obj
-
-    def save_existing(self, form, instance, commit=True):
-        # Update existing entries (not needed in this case, but for completeness)
-        obj = form.save(commit=False)
-        obj.history = self.instance
-        if commit:
-            obj.save()
-        return obj
-
-
-class AccountHistoryInline(admin.TabularInline):
-    model = AccountHistory
-    extra = 0
-    can_delete = False
-    formset = AccountHistoryInlineFormSet
-
-
-@admin.register(History)
-class HistoryAdmin(admin.ModelAdmin):
-    inlines = (AccountHistoryInline, )
-    list_display = ('date', 'total', 'wire_transfer_total', 'investment_total', 'existing_total')
-
-    def total(self, obj):
-        return intcomma(obj.sum)
-    total.short_description = 'Total'
-    total.admin_order_field = 'sum'
-
-    def wire_transfer_total(self, obj):
-        return intcomma(obj.wire_transfer_sum)
-    wire_transfer_total.admin_order_field = 'wire_transfer_sum'
-    wire_transfer_total.short_description = 'Wire Transfer Total'
-
-    def investment_total(self, obj):
-        return intcomma(obj.investment_sum)
-    investment_total.admin_order_field = 'investment_sum'
-    investment_total.short_description = 'Investment Total'
-
-    def existing_total(self, obj):
-        return intcomma(obj.existing_sum)
-    existing_total.admin_order_field = 'existing_sum'
-    existing_total.short_description = 'Existing Total'
-
-    def save_model(self, request, obj, form, change):
-        super().save_model(request, obj, form, change)
-
-    def save_formset(self, request, form, formset, change):
-        formset.save()  # Save AccountHistory objects first
-        if isinstance(formset, AccountHistoryInlineFormSet):
-            form.instance.calculate_sum()
-            form.instance.calculate_wire_transfer()
-            form.instance.save()
-
-
-@admin.register(Gender)
-class GenderAdmin(admin.ModelAdmin):
-    list_display = ('name',)
-    search_fields = ('name',)
-    ordering = ('name',)
-
-    def has_module_permission(self, request):
-        return False
-
-@admin.register(Person)
-class PersonAdmin(admin.ModelAdmin):
-    list_display = ('first_name', 'last_name', 'merchant', 'gender')
-    search_fields = ('first_name', 'last_name', 'merchant__name', 'gender__name')
-    ordering = ('first_name', 'last_name')
-
-
-@admin.register(EventType)
-class EventTypeAdmin(admin.ModelAdmin):
-    list_display = ('name',)
-    search_fields = ('name',)
-
-
-@admin.register(Event)
-class EventAdmin(admin.ModelAdmin):
-    list_display = ('event_time', 'event_type', 'name', 'location', 'passed_time')
-    search_fields = ('event_time', 'event_type__name', 'name', 'location__city',
-                     'location__state', 'location__country')
-    autocomplete_fields = ('event_type', 'location', 'people')
-    ordering = ('-event_time', )
