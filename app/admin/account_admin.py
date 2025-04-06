@@ -58,7 +58,7 @@ class AccountHistoryInline(admin.TabularInline):
 @admin.register(History)
 class HistoryAdmin(admin.ModelAdmin):
     inlines = (AccountHistoryInline, )
-    list_display = ('date', 'total', 'wire_transfer_total', 'investment_total', 'existing_total')
+    list_display = ('date', 'existing_total', 'investment_total', 'total', 'wire_transfer_total',)
 
     def total(self, obj):
         return intcomma(obj.sum)
@@ -78,7 +78,7 @@ class HistoryAdmin(admin.ModelAdmin):
     def existing_total(self, obj):
         return intcomma(obj.existing_sum)
     existing_total.admin_order_field = 'existing_sum'
-    existing_total.short_description = 'Existing Total'
+    existing_total.short_description = 'Net Worth'
 
     def save_model(self, request, obj, form, change):
         super().save_model(request, obj, form, change)
