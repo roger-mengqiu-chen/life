@@ -25,7 +25,7 @@ class AccountHistoryInlineFormSet(BaseInlineFormSet):
         super().__init__(*args, **kwargs)
 
         if self.instance.pk is None:
-            all_accounts = Account.objects.all()
+            all_accounts = Account.objects.filter(is_active=True).order_by('name')
             initial_data = []
             for account in all_accounts:
                 initial_data.append({'account': account})
