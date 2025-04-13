@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.contrib.humanize.templatetags.humanize import intcomma
 from django.forms import BaseInlineFormSet
 
-from app.models import AccountType, Account, AccountHistory, History
+from app.models import AccountType, Account, AccountHistory, History, Bank
 from app.services import get_histories
 
 
@@ -12,10 +12,17 @@ class AccountTypeAdmin(admin.ModelAdmin):
     search_fields = ('name',)
 
 
+@admin.register(Bank)
+class BankAdmin(admin.ModelAdmin):
+    list_display = ('name',)
+    search_fields = ('name',)
+    ordering = ('name',)
+
+
 @admin.register(Account)
 class AccountAdmin(admin.ModelAdmin):
-    list_display = ('name', 'account_no', 'type', 'is_active')
-    search_fields = ('name', 'account_no', 'type__name')
+    list_display = ('name', 'account_no','bank', 'type', 'is_active')
+    search_fields = ('name', 'account_no', 'bank', 'type__name')
     autocomplete_fields = ('type',)
     ordering = ('name', )
 

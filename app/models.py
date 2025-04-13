@@ -112,11 +112,18 @@ class AccountType(models.Model):
 
     def __str__(self):
         return self.name
+    
+
+class Bank(models.Model):
+    name = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.name
 
 
 class Account(models.Model):
     name = models.CharField(max_length=255)
-    bank = models.CharField(max_length=255, null=True, blank=True)
+    bank = models.ForeignKey(Bank, on_delete=models.PROTECT, null=True, blank=True)
     account_no = models.IntegerField(null=True, blank=True)
     type = models.ForeignKey(AccountType, on_delete=models.PROTECT)
     is_active = models.BooleanField(default=True)
