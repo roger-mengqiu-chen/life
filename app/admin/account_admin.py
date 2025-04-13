@@ -38,6 +38,12 @@ class AccountHistoryInlineFormSet(BaseInlineFormSet):
                 initial_data.append({'account': account})
             self.initial = initial_data
             self.extra = len(initial_data)
+        else:
+            all_accounts = self.instance.accounthistory_set.all().order_by('account__name')
+            initial_data = []
+            for account in all_accounts:
+                initial_data.append({'account': account.account, 'account_amount': account.account_amount})
+            self.initial = initial_data
 
     def save_new(self, form, commit=True):
         # Assign the history instance to each new form entry
