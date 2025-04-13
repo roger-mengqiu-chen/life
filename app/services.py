@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 import pandas
 
-from .models import Transaction
+from .models import Transaction, History
 
 
 def get_last_month_trans_df():
@@ -38,3 +38,16 @@ def calculate_income(df):
     category_sum = result_df.groupby('category')['amount'].sum()
     category_sum = category_sum.reset_index()
     return category_sum.to_dict(orient='records')
+
+
+def get_histories():
+    values = History.objects.all().values('date', 'existing_sum', 'investment_sum')
+    df = pandas.DataFrame(values)
+    df['date'] = df.apply(
+        lambda x: x['date'].strftime('%Y-%m-%d'), axis=1
+    )
+    
+    networth_df = df[['date', 'existing_sum']]
+    networth_df.rename(columns={'existing_sum': 'net_worth'}, inplace=True)
+    investment_df = df[['date', 'investment_sum']]
+    return networth_df.to_dict(orient='records'), investment_df.to_dict(orient='records')

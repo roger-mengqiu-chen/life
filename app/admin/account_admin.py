@@ -3,6 +3,7 @@ from django.contrib.humanize.templatetags.humanize import intcomma
 from django.forms import BaseInlineFormSet
 
 from app.models import AccountType, Account, AccountHistory, History
+from app.services import get_histories
 
 
 @admin.register(AccountType)
@@ -59,6 +60,8 @@ class AccountHistoryInline(admin.TabularInline):
 class HistoryAdmin(admin.ModelAdmin):
     inlines = (AccountHistoryInline, )
     list_display = ('date', 'existing_total', 'investment_total', 'total', 'wire_transfer_total',)
+    ordering = ('-date', )
+    change_list_template = 'admin/app/history/change_list.html'
 
     def total(self, obj):
         return intcomma(obj.sum)
@@ -89,3 +92,11 @@ class HistoryAdmin(admin.ModelAdmin):
             form.instance.calculate_sum()
             form.instance.calculate_wire_transfer()
             form.instance.save()
+
+    def changelist_view(self, request, extra_context=None):
+        extra_context = extra_context or {}
+        net_worth, investment = get_histories()
+        extra_context['net_worth'] = net_worth
+        extra_context['investment'] = investment
+
+        return super(HistoryAdmin, self).changelist_view(request, extra_context)
