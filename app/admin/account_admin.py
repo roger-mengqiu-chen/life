@@ -14,7 +14,7 @@ class AccountTypeAdmin(admin.ModelAdmin):
 
 @admin.register(Account)
 class AccountAdmin(admin.ModelAdmin):
-    list_display = ('name', 'account_no', 'type')
+    list_display = ('name', 'account_no', 'type', 'is_active')
     search_fields = ('name', 'account_no', 'type__name')
     autocomplete_fields = ('type',)
     ordering = ('name', )
