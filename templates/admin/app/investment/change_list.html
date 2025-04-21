@@ -33,7 +33,6 @@
     const dataSet = Object.values(groupedData).map(group => ({
       label: group.label,
       data: group.data,
-      backgroundColor: `rgba(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, 0.6)`, // Random color
       stack: group.label.split(' - ')[0] // Stack by year
     }));
 
