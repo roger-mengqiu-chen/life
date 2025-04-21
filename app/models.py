@@ -130,6 +130,13 @@ class Account(models.Model):
 
     def __str__(self):
         return self.name
+    
+
+class Investment(models.Model):
+    account = models.ForeignKey(Account, on_delete=models.PROTECT)
+    due_date = models.DateField(null=True, blank=True)
+    amount = models.FloatField(default=0, blank=True)
+    interest_rate = models.FloatField(default=0, blank=True)
 
 
 class History(models.Model):
