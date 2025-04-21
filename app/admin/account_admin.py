@@ -3,7 +3,7 @@ from django.contrib.humanize.templatetags.humanize import intcomma
 from django.forms import BaseInlineFormSet
 
 from app.models import AccountType, Account, AccountHistory, History, Bank, Investment
-from app.services import get_histories
+from app.services import get_histories, get_investment_by_account_due_date
 
 
 @admin.register(AccountType)
@@ -122,3 +122,11 @@ class InvestmentAdmin(admin.ModelAdmin):
     list_filter = ('account',)
     autocomplete_fields = ('account',)
     ordering = ('account', 'due_date')
+    change_list_template = 'admin/app/investment/change_list.html'
+
+    def changelist_view(self, request, extra_context=None):
+        extra_context = extra_context or {}
+        investment = get_investment_by_account_due_date()
+        extra_context['investment'] = investment
+
+        return super(InvestmentAdmin, self).changelist_view(request, extra_context)

@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 import pandas
 
-from .models import Transaction, History
+from .models import Transaction, History, Investment
 
 
 def get_last_month_trans_df():
@@ -51,3 +51,17 @@ def get_histories():
     networth_df.rename(columns={'existing_sum': 'net_worth'}, inplace=True)
     investment_df = df[['date', 'investment_sum']]
     return networth_df.to_dict(orient='records'), investment_df.to_dict(orient='records')
+
+
+def get_investment_by_account_due_date():
+    values = Investment.objects.all().values('account__name', 'due_date', 'amount')
+    df = pandas.DataFrame(values)
+    df['year'] = df.apply(
+        lambda x: x['due_date'].strftime('%Y'), axis=1
+    )
+    df['month'] = df.apply(
+        lambda x: x['due_date'].strftime('%m'), axis=1
+    )
+    df.drop(columns=['due_date'], inplace=True)
+    df.rename(columns={'account__name': 'account'}, inplace=True)
+    return df.to_dict(orient='records')
