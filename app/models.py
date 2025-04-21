@@ -138,6 +138,9 @@ class Investment(models.Model):
     amount = models.FloatField(default=0, blank=True)
     interest_rate = models.FloatField(default=0, blank=True)
 
+    def __str__(self):
+        return f'{self.due_date} - {self.amount}'
+
 
 class History(models.Model):
     date = models.DateField(auto_now=True, unique=True)

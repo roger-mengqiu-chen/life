@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.contrib.humanize.templatetags.humanize import intcomma
 from django.forms import BaseInlineFormSet
 
-from app.models import AccountType, Account, AccountHistory, History, Bank
+from app.models import AccountType, Account, AccountHistory, History, Bank, Investment
 from app.services import get_histories
 
 
@@ -113,3 +113,12 @@ class HistoryAdmin(admin.ModelAdmin):
         extra_context['investment'] = investment
 
         return super(HistoryAdmin, self).changelist_view(request, extra_context)
+
+
+@admin.register(Investment)
+class InvestmentAdmin(admin.ModelAdmin):
+    list_display = ('account', 'due_date', 'amount', 'interest_rate')
+    search_fields = ('account__name', 'due_date')
+    list_filter = ('account',)
+    autocomplete_fields = ('account',)
+    ordering = ('account', 'due_date')
