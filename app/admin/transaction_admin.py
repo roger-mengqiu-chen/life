@@ -122,6 +122,7 @@ class TransactionAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     autocomplete_fields = ('transaction_type', 'category', 'merchant')
     resource_class = TransactionSource
     ordering = ('-transaction_time', )
+    list_filter = ('transaction_type', 'category', 'merchant')
     change_list_template = 'admin/app/transaction/change_list.html'
 
     def displayed_amount(self, obj):

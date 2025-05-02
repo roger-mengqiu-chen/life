@@ -45,6 +45,7 @@ class Merchant(models.Model):
             models.UniqueConstraint(fields=['name', 'location'],
                                     name='unique_merchant_name'),
         ]
+        ordering = ['name']
 
     def __str__(self):
         return self.name
@@ -64,6 +65,7 @@ class TransactionCategory(models.Model):
 
     class Meta:
         verbose_name_plural = "Transaction Categories"
+        ordering = ['name']
 
     def __str__(self):
         return self.name
