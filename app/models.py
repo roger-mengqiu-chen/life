@@ -147,7 +147,7 @@ class History(models.Model):
     sum = models.FloatField(default=0, blank=True)
     wire_transfer_sum = models.FloatField(default=0, blank=True)
     investment_sum = models.FloatField(default=0, blank=True)
-    existing_sum = models.FloatField(default=0, blank=True)
+    existing_sum = models.FloatField(default=0, blank=True, help_text="Existing sum is total - car/house")
 
     class Meta:
         verbose_name_plural = "Histories"
