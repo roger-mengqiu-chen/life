@@ -261,6 +261,9 @@ class Event(models.Model):
 class UtilityType(models.Model):
     name = models.CharField(max_length=255)
 
+    def __str__(self):
+        return self.name.title()
+
 
 class UtilityTransaction(models.Model):
     amount = models.FloatField()
@@ -272,3 +275,11 @@ class UtilityTransaction(models.Model):
     cost_per_day = models.FloatField()
     cost_per_unit = models.FloatField()
     type = models.ForeignKey(UtilityType, on_delete=models.PROTECT)
+
+    def save(self, *args, **kwargs):
+        days = (self.end_time - self.start_time).days
+        self.days = days
+        self.usage_per_day = self.usage / days
+        self.cost_per_day = self.amount / days
+        self.cost_per_unit = self.amount / self.usage if self.usage > 0 else 0
+        super().save(*args, **kwargs)

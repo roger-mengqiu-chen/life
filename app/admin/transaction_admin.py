@@ -9,7 +9,8 @@ from import_export import resources, fields
 from import_export.admin import ImportExportModelAdmin
 from import_export.widgets import ForeignKeyWidget
 
-from app.models import TransactionType, TransactionCategory, Merchant, Transaction, Location
+from app.models import TransactionType, TransactionCategory, Merchant, Transaction, Location, UtilityType, \
+    UtilityTransaction
 from app.services import get_last_month_trans_df, calculate_expense, calculate_income
 
 
@@ -145,3 +146,17 @@ class TransactionAdmin(ImportExportModelAdmin, admin.ModelAdmin):
         extra_context['income'] = income
 
         return super(TransactionAdmin, self).changelist_view(request, extra_context)
+
+
+@admin.register(UtilityType)
+class UtilityTypeAdmin(admin.ModelAdmin):
+    list_display = ('name',)
+    search_fields = ('name',)
+    ordering = ('name',)
+
+
+@admin.register(UtilityTransaction)
+class UtilityTransactionAdmin(admin.ModelAdmin):
+    list_display = ('type', 'amount', 'usage', 'start_time', 'end_time', 'days')
+    ordering = ('-start_time',)
+    list_filter = ('type',)
