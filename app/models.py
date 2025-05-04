@@ -272,5 +272,3 @@ class UtilityTransaction(models.Model):
     cost_per_day = models.FloatField()
     cost_per_unit = models.FloatField()
     type = models.ForeignKey(UtilityType, on_delete=models.PROTECT)
-    transaction_type = models.ForeignKey(TransactionType,
-                                         on_delete=models.PROTECT)
