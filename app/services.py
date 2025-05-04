@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 import pandas
 
-from .models import Transaction, History, Investment
+from .models import Transaction, History, Investment, UtilityTransaction
 
 
 def get_last_month_trans_df():
@@ -65,3 +65,12 @@ def get_investment_by_account_due_date():
     df.drop(columns=['due_date'], inplace=True)
     df.rename(columns={'account__name': 'account'}, inplace=True)
     return df.to_dict(orient='records')
+
+
+def calculate_utility(utility: UtilityTransaction):
+    days = (utility.start_time - utility.end_time).days
+    utility.days = days
+    utility.usage_per_day = utility.usage / days
+    utility.cost_per_day = utility.amount / days
+    utility.cost_per_unit = utility.amount / utility.usage
+    utility.save()
