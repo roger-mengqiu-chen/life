@@ -157,6 +157,6 @@ class UtilityTypeAdmin(admin.ModelAdmin):
 
 @admin.register(UtilityTransaction)
 class UtilityTransactionAdmin(admin.ModelAdmin):
-    list_display = ('type', 'amount', 'usage', 'start_time', 'end_time', 'days')
+    list_display = ('type', 'amount', 'usage', 'year', 'month', 'days')
     ordering = ('-start_time',)
     list_filter = ('type',)

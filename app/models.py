@@ -1,7 +1,7 @@
 from django.db import models
 from django.utils import timezone
 from django.utils.html import format_html
-from datetime import datetime
+from datetime import datetime, timedelta
 
 
 class Gender(models.Model):
@@ -270,6 +270,8 @@ class UtilityTransaction(models.Model):
     usage = models.FloatField()
     start_time = models.DateField()
     end_time = models.DateField()
+    year = models.IntegerField(blank=True, null=True)
+    month = models.IntegerField(blank=True, null=True)
     days = models.IntegerField(blank=True, null=True)
     usage_per_day = models.FloatField(blank=True, null=True)
     cost_per_day = models.FloatField(blank=True, null=True)
@@ -278,7 +280,10 @@ class UtilityTransaction(models.Model):
 
     def save(self, *args, **kwargs):
         days = (self.end_time - self.start_time).days
+        mid = self.start_time + timedelta(days=15)
         self.days = days
+        self.year = mid.year
+        self.month = mid.month
         self.usage_per_day = self.usage / days
         self.cost_per_day = self.amount / days
         self.cost_per_unit = self.amount / self.usage if self.usage > 0 else 0
