@@ -256,3 +256,21 @@ class Event(models.Model):
             result += f"{months} months "
         result += f"{days} days "
         return result.strip()
+
+
+class UtilityType(models.Model):
+    name = models.CharField(max_length=255)
+
+
+class UtilityTransaction(models.Model):
+    amount = models.FloatField()
+    usage = models.FloatField()
+    start_time = models.DateField()
+    end_time = models.DateField()
+    days = models.IntegerField()
+    usage_per_day = models.FloatField()
+    cost_per_day = models.FloatField()
+    cost_per_unit = models.FloatField()
+    type = models.ForeignKey(UtilityType, on_delete=models.PROTECT)
+    transaction_type = models.ForeignKey(TransactionType,
+                                         on_delete=models.PROTECT)
