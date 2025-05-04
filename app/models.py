@@ -270,10 +270,10 @@ class UtilityTransaction(models.Model):
     usage = models.FloatField()
     start_time = models.DateField()
     end_time = models.DateField()
-    days = models.IntegerField()
-    usage_per_day = models.FloatField()
-    cost_per_day = models.FloatField()
-    cost_per_unit = models.FloatField()
+    days = models.IntegerField(blank=True, null=True)
+    usage_per_day = models.FloatField(blank=True, null=True)
+    cost_per_day = models.FloatField(blank=True, null=True)
+    cost_per_unit = models.FloatField(blank=True, null=True)
     type = models.ForeignKey(UtilityType, on_delete=models.PROTECT)
 
     def save(self, *args, **kwargs):
