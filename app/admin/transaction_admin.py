@@ -2,7 +2,7 @@ from datetime import datetime
 
 from django.conf import settings
 from django.contrib import admin
-from rangefilter.filters import DateRangeFilterBuilder
+from rangefilter.filters import DateRangeFilter
 from django.contrib.humanize.templatetags.humanize import intcomma
 from django.forms import ModelForm, TextInput
 from import_export import resources, fields
@@ -123,7 +123,7 @@ class TransactionAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     autocomplete_fields = ('transaction_type', 'category', 'merchant')
     resource_class = TransactionSource
     ordering = ('-transaction_time', )
-    list_filter = (('transaction_time', DateRangeFilterBuilder()), 'transaction_type', 'category', 'merchant', )
+    list_filter = (('transaction_time', DateRangeFilter), 'transaction_type', 'category', 'merchant', )
     change_list_template = 'admin/app/transaction/change_list.html'
 
     def displayed_amount(self, obj):
