@@ -65,3 +65,13 @@ def get_investment_by_account_due_date():
     df.drop(columns=['due_date'], inplace=True)
     df.rename(columns={'account__name': 'account'}, inplace=True)
     return df.to_dict(orient='records')
+
+
+def get_utility_df_for_queryset(queryset):
+    values = queryset.values('year', 'month', 'days', 'cost_per_unit', 'usage')
+    df = pandas.DataFrame(values)
+    df['date'] = df.apply(
+        lambda x: f'{x["year"]}-{x["month"]}', axis=1
+    )
+    df.drop(columns=['year', 'month'], inplace=True)
+    return df.to_dict(orient='records')

@@ -11,7 +11,7 @@ from import_export.widgets import ForeignKeyWidget
 
 from app.models import TransactionType, TransactionCategory, Merchant, Transaction, Location, UtilityType, \
     UtilityTransaction
-from app.services import get_last_month_trans_df, calculate_expense, calculate_income
+from app.services import get_last_month_trans_df, calculate_expense, calculate_income, get_utility_df_for_queryset
 
 
 @admin.register(Location)
@@ -160,3 +160,16 @@ class UtilityTransactionAdmin(admin.ModelAdmin):
     list_display = ('type', 'amount', 'usage', 'year', 'month', 'days')
     ordering = ('-start_time',)
     list_filter = ('type',)
+    change_list_template = 'admin/app/utility_transaction/change_list.html'
+
+    def changelist_view(self, request, extra_context=None):
+        extra_context = extra_context or {}
+        qd = request.GET.copy()
+        query_dict = {}
+        for k, v in qd.items() :
+            query_dict[k] = v[0]
+        queryset = UtilityTransaction.objects.filter(**query_dict)
+        df = get_utility_df_for_queryset(queryset)
+        extra_context['transactions'] = df
+
+        return super(UtilityTransactionAdmin, self).changelist_view(request, extra_context)

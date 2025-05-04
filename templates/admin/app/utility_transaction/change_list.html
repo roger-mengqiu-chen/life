@@ -1,0 +1,88 @@
+{% extends "admin/change_list.html" %}
+
+{% block content %}
+  <div style="display: block;">
+    <div style="display: block;
+                box-sizing: border-box;
+                height: 80%;
+                width: 100%;">
+        <canvas id="transactionChart"></canvas>
+    </div>
+    <div style="display: block;
+                box-sizing: border-box;
+                height: 80%;
+                width: 100%">
+        <canvas id="costChart"></canvas>
+    </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+  <script>
+    const netWorthCtx = document.getElementById('transactionChart');
+    const costCtx = document.getElementById('costChart');
+
+    let transactions = "{{ transactions|safe }}".replace(/'/g, '"');
+    let transactionData = JSON.parse(transactions);
+
+    let transactionX = transactionData.map(item => item["date"]);
+    let transactionY = transactionData.map(item => item["usage"]);
+    let costY = transactionData.map(item => item["cost_per_unit"]);
+
+    let transactionChartData = {
+      labels: transactionX,
+      datasets: [{
+        label: 'Usage',
+        data: transactionY,
+        tension: 0.4
+      }]
+    }
+
+    let costChartData = {
+        labels: transactionX,
+        datasets: [{
+          label: 'Cost',
+          data: costY,
+          tension: 0.4,
+        }]
+    }
+
+    new Chart(netWorthCtx, {
+      type: 'line',
+      data: transactionChartData,
+      options: {
+        responsive: true,
+        plugins: {
+          legend: {
+            display: true
+          },
+          datalabels: {
+            color: '#36A2EB',
+            formatter: (value, context) => {
+              return value.toFixed(2);
+            }
+          }
+        }
+      }
+    });
+
+    new Chart(costCtx, {
+      type: 'line',
+      data: costChartData,
+      options: {
+        responsive: true,
+        plugins: {
+          legend: {
+            display: true
+          },
+          datalabels: {
+            color: '#36A2EB',
+            formatter: (value, context) => {
+              return value.toFixed(2);
+            }
+          }
+        }
+      }
+    });
+  </script>
+{{ block.super }}
+{% endblock %}
