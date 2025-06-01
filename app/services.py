@@ -19,7 +19,7 @@ def get_last_month_trans_df():
         'amount',
         'transaction_type__name'
     ))
-    df = pandas.DataFrame(last_month_expense, columns=['category', 'colocr',
+    df = pandas.DataFrame(last_month_expense, columns=['category', 'color',
                                                        'amount', 'transaction_type'])
     return df
 
