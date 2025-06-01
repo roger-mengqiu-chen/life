@@ -54,6 +54,8 @@ class Merchant(models.Model):
 class TransactionType(models.Model):
     name = models.CharField(max_length=255)
     is_income = models.BooleanField(default=False)
+    is_transfer = models.BooleanField(default=False)
+    is_expense = models.BooleanField(default=False)
 
     def __str__(self):
         return self.name
@@ -111,6 +113,10 @@ class ReportLine(models.Model):
 
 class AccountType(models.Model):
     name = models.CharField(max_length=255, unique=True)
+    is_asset = models.BooleanField(default=False)
+    is_liability = models.BooleanField(default=False)
+    is_cash = models.BooleanField(default=False)
+    is_investment = models.BooleanField(default=False)
 
     def __str__(self):
         return self.name
