@@ -46,9 +46,9 @@ def get_histories():
     df['date'] = df.apply(
         lambda x: x['date'].strftime('%Y-%m-%d'), axis=1
     )
-    
-    networth_df = df[['date', 'existing_sum']]
-    networth_df.rename(columns={'existing_sum': 'net_worth'}, inplace=True)
+    df.rename(columns={'existing_sum': 'net_worth'}, inplace=True)
+
+    networth_df = df[['date', 'net_worth']]
     investment_df = df[['date', 'investment_sum']]
     return networth_df.to_dict(orient='records'), investment_df.to_dict(orient='records')
 
