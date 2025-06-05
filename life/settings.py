@@ -128,7 +128,7 @@ LOGGING = {
         }
     },
     'loggers': {
-        'django.request': {
+        'django.server': {
             'handlers': ['console', 'file'],
             'propagate': True,
             'level': 'DEBUG',
