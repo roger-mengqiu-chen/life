@@ -8,7 +8,7 @@ from mylife.services import get_histories, get_investment_by_account_due_date
 
 @admin.register(AccountType)
 class AccountTypeAdmin(admin.ModelAdmin):
-    list_display = ('name',)
+    list_display = ('name', 'is_asset', 'is_cash', 'is_liability', 'is_investment')
     search_fields = ('name',)
 
 
