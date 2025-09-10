@@ -9,9 +9,9 @@ from import_export import resources, fields
 from import_export.admin import ImportExportModelAdmin
 from import_export.widgets import ForeignKeyWidget
 
-from app.models import TransactionType, TransactionCategory, Merchant, Transaction, Location, UtilityType, \
+from mylife.models import TransactionType, TransactionCategory, Merchant, Transaction, Location, UtilityType, \
     UtilityTransaction
-from app.services import get_last_month_trans_df, calculate_expense, calculate_income, get_utility_df_for_queryset
+from mylife.services import get_last_month_trans_df, calculate_expense, calculate_income, get_utility_df_for_queryset
 
 
 @admin.register(Location)
@@ -125,7 +125,7 @@ class TransactionAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     resource_class = TransactionSource
     ordering = ('-transaction_time', )
     list_filter = (('transaction_time', DateRangeFilter), 'transaction_type', 'category', 'merchant', )
-    change_list_template = 'admin/app/transaction/change_list.html'
+    change_list_template = 'admin/mylife/transaction/change_list.html'
 
     def displayed_amount(self, obj):
         return intcomma(obj.amount)
@@ -160,7 +160,7 @@ class UtilityTransactionAdmin(admin.ModelAdmin):
     list_display = ('type', 'amount', 'usage', 'year', 'month', 'days')
     ordering = ('-start_time',)
     list_filter = ('type',)
-    change_list_template = 'admin/app/utility_transaction/change_list.html'
+    change_list_template = 'admin/mylife/utility_transaction/change_list.html'
 
     def changelist_view(self, request, extra_context=None):
         extra_context = extra_context or {}

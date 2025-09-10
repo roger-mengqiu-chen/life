@@ -22,7 +22,7 @@ INSTALLED_APPS = [
     'import_export',
     'rest_framework',
     'rangefilter',
-    'app'
+    'mylife'
 ]
 
 MIDDLEWARE = [

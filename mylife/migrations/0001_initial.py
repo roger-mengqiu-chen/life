@@ -92,7 +92,7 @@ class Migration(migrations.Migration):
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.CharField(max_length=255)),
                 ('account_no', models.IntegerField(blank=True, null=True)),
-                ('type', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='app.accounttype')),
+                ('type', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='mylife.accounttype')),
             ],
         ),
         migrations.CreateModel(
@@ -113,7 +113,7 @@ class Migration(migrations.Migration):
                 ('website', models.URLField(blank=True, null=True)),
                 ('phone', models.CharField(blank=True, max_length=255, null=True)),
                 ('email', models.EmailField(blank=True, max_length=254, null=True)),
-                ('location', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='app.location')),
+                ('location', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='mylife.location')),
             ],
         ),
         migrations.CreateModel(
@@ -122,8 +122,8 @@ class Migration(migrations.Migration):
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('first_name', models.CharField(max_length=100)),
                 ('last_name', models.CharField(blank=True, max_length=100, null=True)),
-                ('gender', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='app.gender')),
-                ('merchant', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.PROTECT, to='app.merchant')),
+                ('gender', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='mylife.gender')),
+                ('merchant', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.PROTECT, to='mylife.merchant')),
             ],
             options={
                 'verbose_name_plural': 'People',
@@ -136,9 +136,9 @@ class Migration(migrations.Migration):
                 ('event_time', models.DateTimeField()),
                 ('name', models.CharField(max_length=255)),
                 ('notes', models.TextField(blank=True, null=True)),
-                ('event_type', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='app.eventtype')),
-                ('location', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='app.location')),
-                ('people', models.ManyToManyField(to='app.person')),
+                ('event_type', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='mylife.eventtype')),
+                ('location', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='mylife.location')),
+                ('people', models.ManyToManyField(to='mylife.person')),
             ],
         ),
         migrations.CreateModel(
@@ -147,8 +147,8 @@ class Migration(migrations.Migration):
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('amount', models.FloatField(blank=True, default=0)),
                 ('percentage', models.FloatField(blank=True, default=0)),
-                ('report', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='app.report')),
-                ('category', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='app.transactioncategory')),
+                ('report', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='mylife.report')),
+                ('category', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='mylife.transactioncategory')),
             ],
         ),
         migrations.CreateModel(
@@ -157,9 +157,9 @@ class Migration(migrations.Migration):
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('amount', models.FloatField()),
                 ('transaction_time', models.DateField()),
-                ('merchant', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='app.merchant')),
-                ('category', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='app.transactioncategory')),
-                ('transaction_type', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='app.transactiontype')),
+                ('merchant', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='mylife.merchant')),
+                ('category', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='mylife.transactioncategory')),
+                ('transaction_type', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='mylife.transactiontype')),
             ],
         ),
         migrations.CreateModel(
@@ -167,8 +167,8 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('account_amount', models.FloatField(blank=True, default=0)),
-                ('account', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='app.account')),
-                ('history', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='app.history')),
+                ('account', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='mylife.account')),
+                ('history', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='mylife.history')),
             ],
             options={
                 'unique_together': {('account', 'history')},

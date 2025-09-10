@@ -7,7 +7,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('app', '0006_alter_merchant_options_and_more'),
+        ('mylife', '0006_alter_merchant_options_and_more'),
     ]
 
     operations = [
@@ -30,8 +30,8 @@ class Migration(migrations.Migration):
                 ('usage_per_day', models.FloatField()),
                 ('cost_per_day', models.FloatField()),
                 ('cost_per_unit', models.FloatField()),
-                ('transaction_type', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='app.transactiontype')),
-                ('type', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='app.utilitytype')),
+                ('transaction_type', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='mylife.transactiontype')),
+                ('type', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='mylife.utilitytype')),
             ],
         ),
     ]

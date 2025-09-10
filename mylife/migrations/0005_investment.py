@@ -7,7 +7,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('app', '0004_bank_alter_account_bank'),
+        ('mylife', '0004_bank_alter_account_bank'),
     ]
 
     operations = [
@@ -18,7 +18,7 @@ class Migration(migrations.Migration):
                 ('due_date', models.DateField(blank=True, null=True)),
                 ('amount', models.FloatField(blank=True, default=0)),
                 ('interest_rate', models.FloatField(blank=True, default=0)),
-                ('account', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='app.account')),
+                ('account', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='mylife.account')),
             ],
         ),
     ]

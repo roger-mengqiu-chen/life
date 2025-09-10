@@ -1,7 +1,7 @@
 from django.contrib import admin
 
-from app.models import (Person, EventType,
-                        Event, Gender)
+from mylife.models import (Person, EventType,
+                           Event, Gender)
 
 admin.site.site_header = "Life"
 admin.site.site_title = "Life"

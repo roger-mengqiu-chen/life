@@ -2,8 +2,8 @@ from django.contrib import admin
 from django.contrib.humanize.templatetags.humanize import intcomma
 from django.forms import BaseInlineFormSet
 
-from app.models import AccountType, Account, AccountHistory, History, Bank, Investment
-from app.services import get_histories, get_investment_by_account_due_date
+from mylife.models import AccountType, Account, AccountHistory, History, Bank, Investment
+from mylife.services import get_histories, get_investment_by_account_due_date
 
 
 @admin.register(AccountType)
@@ -74,7 +74,7 @@ class HistoryAdmin(admin.ModelAdmin):
     inlines = (AccountHistoryInline, )
     list_display = ('date', 'existing_total', 'investment_total', 'total', 'wire_transfer_total',)
     ordering = ('-date', )
-    change_list_template = 'admin/app/history/change_list.html'
+    change_list_template = 'admin/mylife/history/change_list.html'
 
     def total(self, obj):
         return intcomma(obj.sum)
@@ -122,7 +122,7 @@ class InvestmentAdmin(admin.ModelAdmin):
     list_filter = ('account',)
     autocomplete_fields = ('account',)
     ordering = ('account', 'due_date')
-    change_list_template = 'admin/app/investment/change_list.html'
+    change_list_template = 'admin/mylife/investment/change_list.html'
 
     def changelist_view(self, request, extra_context=None):
         extra_context = extra_context or {}
