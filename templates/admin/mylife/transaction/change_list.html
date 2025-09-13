@@ -3,6 +3,10 @@
 {% block content %}
     <h1>Cash Flow</h1>
     <h2 id="cashFlow"></h2>
+    <h1>Income</h1>
+    <h2 id="income"></h2>
+    <h1>Expense</h1>
+    <h2 id="expense"></h2>
     <div style="display: flex;">
         <div style="display: block;
                     box-sizing: border-box;
@@ -51,8 +55,12 @@
             }]
         };
 
-        let cashFlow = document.getElementById("cashFlow");
+        const cashFlow = document.getElementById("cashFlow");
+        const incomeEle = document.getElementById("income");
+        const expenseEle = document.getElementById("expense");
         cashFlow.innerText = (total_income - total_expense).toFixed(2);
+        incomeEle.innerText = total_income.toFixed(2);
+        expenseEle.innerText = total_expense.toFixed(2);
 
         new Chart(ctx, {
             type: 'pie',
