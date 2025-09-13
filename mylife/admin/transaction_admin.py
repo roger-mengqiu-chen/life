@@ -11,7 +11,7 @@ from import_export.widgets import ForeignKeyWidget
 
 from mylife.models import TransactionType, TransactionCategory, Merchant, Transaction, Location, UtilityType, \
     UtilityTransaction
-from mylife.services import get_last_month_trans_df, calculate_expense, calculate_income, get_utility_df_for_queryset
+from mylife.services import get_trans_df, calculate_expense, calculate_income, get_utility_df_for_queryset
 
 
 @admin.register(Location)
@@ -139,7 +139,7 @@ class TransactionAdmin(ImportExportModelAdmin, admin.ModelAdmin):
 
     def changelist_view(self, request, extra_context=None):
         extra_context = extra_context or {}
-        df = get_last_month_trans_df()
+        df = get_trans_df(request)
         expense = calculate_expense(df)
         income = calculate_income(df)
         extra_context['expense'] = expense

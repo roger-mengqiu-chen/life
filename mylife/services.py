@@ -4,14 +4,16 @@ import pandas
 from .models import Transaction, History, Investment
 
 
-def get_last_month_trans_df():
-    today = datetime.today()
-    this_month = today.replace(day=1).date()
-    last_month = (today.replace(day=1) - timedelta(days=1)).replace(day=1).date()
-    last_month_expense = list(Transaction.objects.filter(
-        transaction_time__gte=last_month,
-        transaction_time__lte=this_month,
-    ).exclude(
+def get_trans_df(request):
+    dict_query = request.GET.dict()
+    dict_query['transaction_time__gte'] = dict_query.pop('transaction_time__range__gte', None)
+    dict_query['transaction_time__lte'] = dict_query.pop('transaction_time__range__lte', None)
+    kwargs = {}
+    for k, v in dict_query.items():
+        if v is not None:
+            kwargs[k] = v
+
+    last_month_expense = list(Transaction.objects.filter(**kwargs).exclude(
         transaction_type__name__iexact='wire transfer'
     ).values_list(
         'category__name',
