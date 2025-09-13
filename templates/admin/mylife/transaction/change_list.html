@@ -1,7 +1,7 @@
 {% extends "admin/change_list.html" %}
 
 {% block content %}
-    <h1>Cash Flow</h1>
+    <h1 id="cashFlowTitle">Cash Flow</h1>
     <h2 id="cashFlow"></h2>
     <h1>Income</h1>
     <h2 id="income"></h2>
@@ -24,6 +24,10 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
     <script>
+        const cashFlowTitle = document.getElementById("cashFlowTitle");
+        const today = new Date();
+        const thisYear = today.getFullYear();
+        cashFlowTitle.innerText = thisYear + " Cash Flow";
         const ctx = document.getElementById('myExpenseChart');
 
         let expenses = "{{ expense|safe }}".replace(/'/g, '"');
