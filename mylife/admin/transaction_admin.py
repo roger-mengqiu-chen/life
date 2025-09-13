@@ -2,6 +2,7 @@ from datetime import datetime
 
 from django.conf import settings
 from django.contrib import admin
+from django.shortcuts import render
 from rangefilter.filters import DateRangeFilter
 from django.contrib.humanize.templatetags.humanize import intcomma
 from django.forms import ModelForm, TextInput
@@ -12,6 +13,35 @@ from import_export.widgets import ForeignKeyWidget
 from mylife.models import TransactionType, TransactionCategory, Merchant, Transaction, Location, UtilityType, \
     UtilityTransaction
 from mylife.services import get_trans_df, calculate_expense, calculate_income, get_utility_df_for_queryset
+
+
+def bulk_edit_category(modeladmin, request, queryset):
+    if 'apply' in request.POST:
+        new_value = request.POST.get('new_value')
+
+        # Check if a new value was provided
+        if not new_value:
+            modeladmin.message_user(request, "Error: A new value must be provided.", level='ERROR')
+            return
+
+        # Update the selected records
+        updated_count = queryset.update(category=new_value)
+
+        # Display a success message
+        modeladmin.message_user(request, f"{updated_count} records were successfully updated.")
+        return
+
+    categories = TransactionCategory.objects.all()
+    context = {
+        'categories': categories,
+        'queryset': queryset,
+        'model_meta': modeladmin.model._meta,
+    }
+    return render(request, 'admin/bulk_edit_template.html', context)
+
+
+# Add a description for the action in the Django admin interface
+bulk_edit_category.short_description = "Bulk edit category"
 
 
 @admin.register(Location)
@@ -126,6 +156,7 @@ class TransactionAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     ordering = ('-transaction_time', )
     list_filter = (('transaction_time', DateRangeFilter), 'transaction_type', 'category', 'merchant', )
     change_list_template = 'admin/mylife/transaction/change_list.html'
+    actions = [bulk_edit_category]
 
     def displayed_amount(self, obj):
         return intcomma(obj.amount)
