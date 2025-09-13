@@ -11,6 +11,9 @@ class AccountTypeAdmin(admin.ModelAdmin):
     list_display = ('name', 'is_asset', 'is_cash', 'is_liability', 'is_investment')
     search_fields = ('name',)
 
+    def has_module_permission(self, request):
+        return False
+
 
 @admin.register(Bank)
 class BankAdmin(admin.ModelAdmin):

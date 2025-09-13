@@ -154,6 +154,9 @@ class UtilityTypeAdmin(admin.ModelAdmin):
     search_fields = ('name',)
     ordering = ('name',)
 
+    def has_module_permission(self, request):
+        return False
+
 
 @admin.register(UtilityTransaction)
 class UtilityTransactionAdmin(admin.ModelAdmin):
