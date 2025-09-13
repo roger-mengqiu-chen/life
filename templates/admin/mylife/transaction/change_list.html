@@ -58,9 +58,9 @@
         const cashFlow = document.getElementById("cashFlow");
         const incomeEle = document.getElementById("income");
         const expenseEle = document.getElementById("expense");
-        cashFlow.innerText = (total_income - total_expense).toFixed(2);
-        incomeEle.innerText = total_income.toFixed(2);
-        expenseEle.innerText = total_expense.toFixed(2);
+        cashFlow.innerText = parseFloat((total_income - total_expense).toFixed(2)).toLocaleString('en-US');
+        incomeEle.innerText = parseFloat(total_income.toFixed(2)).toLocaleString('en-US');
+        expenseEle.innerText = parseFloat(total_expense.toFixed(2)).toLocaleString('en-US');
 
         new Chart(ctx, {
             type: 'pie',
