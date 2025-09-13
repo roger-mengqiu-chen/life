@@ -6,6 +6,7 @@ from .models import Transaction, History, Investment
 
 def get_trans_df(request):
     dict_query = request.GET.dict()
+    dict_query.pop('p', None)
     dict_query['transaction_time__gte'] = dict_query.pop('transaction_time__range__gte', None)
     dict_query['transaction_time__lte'] = dict_query.pop('transaction_time__range__lte', None)
     kwargs = {}
