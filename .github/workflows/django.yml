@@ -13,7 +13,7 @@ jobs:
     strategy:
       max-parallel: 4
       matrix:
-        python-version: ['3.10', '3.11']
+        python-version: ['3.12']
 
     steps:
     - uses: actions/checkout@v4
@@ -21,10 +21,17 @@ jobs:
       uses: actions/setup-python@v3
       with:
         python-version: ${{ matrix.python-version }}
-    - name: Install Dependencies
+        cache: 'pip'
+
+    - name: Install UV
       run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
+        pip install --upgrade pip
+        pip install uv --no-deps
+
+    - name: Install Dependencies with UV
+      run: |
+        uv sync
+
     - name: Run Tests
       run: |
-        python manage.py test
+        uv run python manage.py test
