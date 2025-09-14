@@ -10,11 +10,11 @@
 
         <input type="hidden" name="action" value="bulk_edit_category">
         
-        <label for="new_value">New Category:</label>
+        <label for="new_value">New {{ attribute }}:</label>
         <select name="new_value" id="new_value" required>
-            <option value="">-- Select a Category --</option>
-            {% for category in categories %}
-            <option value="{{ category.pk }}">{{ category.name }}</option>
+            <option value="">-- Select a {{ attribute }} --</option>
+            {% for op in options %}
+            <option value="{{ op.pk }}">{{ op.name }}</option>
             {% endfor %}
         </select>
         

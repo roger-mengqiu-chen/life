@@ -33,15 +33,42 @@ def bulk_edit_category(modeladmin, request, queryset):
 
     categories = TransactionCategory.objects.all()
     context = {
-        'categories': categories,
+        'attribute': 'Category',
+        'options': categories,
         'queryset': queryset,
         'model_meta': modeladmin.model._meta,
     }
     return render(request, 'admin/bulk_edit_template.html', context)
 
-
-# Add a description for the action in the Django admin interface
 bulk_edit_category.short_description = "Bulk edit category"
+
+
+def bulk_edit_merchant(modeladmin, request, queryset):
+    if 'apply' in request.POST:
+        new_value = request.POST.get('new_value')
+
+        # Check if a new value was provided
+        if not new_value:
+            modeladmin.message_user(request, "Error: A new value must be provided.", level='ERROR')
+            return
+
+        # Update the selected records
+        updated_count = queryset.update(merchant=new_value)
+
+        # Display a success message
+        modeladmin.message_user(request, f"{updated_count} records were successfully updated.")
+        return
+
+    merchants = Merchant.objects.all()
+    context = {
+        'attribute': 'Merchant',
+        'options': merchants,
+        'queryset': queryset,
+        'model_meta': modeladmin.model._meta,
+    }
+    return render(request, 'admin/bulk_edit_template.html', context)
+
+bulk_edit_merchant.short_description = "Bulk edit merchant"
 
 
 @admin.register(Location)
@@ -156,7 +183,7 @@ class TransactionAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     ordering = ('-transaction_time', )
     list_filter = (('transaction_time', DateRangeFilter), 'transaction_type', 'category', 'merchant', )
     change_list_template = 'admin/mylife/transaction/change_list.html'
-    actions = [bulk_edit_category]
+    actions = [bulk_edit_category, bulk_edit_merchant]
 
     def displayed_amount(self, obj):
         return intcomma(obj.amount)
