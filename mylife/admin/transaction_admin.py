@@ -34,6 +34,7 @@ def bulk_edit_category(modeladmin, request, queryset):
     categories = TransactionCategory.objects.all()
     context = {
         'attribute': 'Category',
+        'hidden_value': 'bulk_edit_category',
         'options': categories,
         'queryset': queryset,
         'model_meta': modeladmin.model._meta,
@@ -62,6 +63,7 @@ def bulk_edit_merchant(modeladmin, request, queryset):
     merchants = Merchant.objects.all()
     context = {
         'attribute': 'Merchant',
+        'hidden_value': 'bulk_edit_merchant',
         'options': merchants,
         'queryset': queryset,
         'model_meta': modeladmin.model._meta,

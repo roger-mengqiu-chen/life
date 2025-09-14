@@ -8,7 +8,7 @@
     <form action="" method="post">
         {% csrf_token %}
 
-        <input type="hidden" name="action" value="bulk_edit_category">
+        <input type="hidden" name="action" value="{{ hidden_value }}">
         
         <label for="new_value">New {{ attribute }}:</label>
         <select name="new_value" id="new_value" required>
