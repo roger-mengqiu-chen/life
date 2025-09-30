@@ -142,9 +142,15 @@ class Account(models.Model):
 
 class Investment(models.Model):
     account = models.ForeignKey(Account, on_delete=models.PROTECT)
+    start_date = models.DateField(null=True, blank=False)
     due_date = models.DateField(null=True, blank=True)
+    sold_date = models.DateField(null=True, blank=True)
+    hold_days = models.IntegerField(default=0)
+    holding = models.BooleanField(default=True)
     amount = models.FloatField(default=0, blank=True)
     interest_rate = models.FloatField(default=0, blank=True)
+    profit_rate = models.FloatField(default=0, blank=True)
+    note = models.TextField(null=True, blank=True)
 
     def __str__(self):
         return f'{self.due_date} - {self.amount}'
