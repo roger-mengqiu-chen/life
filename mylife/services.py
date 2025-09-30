@@ -18,7 +18,7 @@ def get_trans_df(request):
             kwargs[k] = v
 
     last_month_expense = list(Transaction.objects.filter(**kwargs).exclude(
-        transaction_type__name__iexact='wire transfer'
+        transaction_type__is_transfer=True
     ).values_list(
         'category__name',
         'category__color',
