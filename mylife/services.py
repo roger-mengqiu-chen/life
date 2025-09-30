@@ -35,7 +35,7 @@ def calculate_expense(df):
     result_df = result_df.drop(columns=['transaction_type'])
     category_sum = result_df.groupby('category')['amount'].sum()
     category_sum = category_sum.reset_index()
-    return category_sum.to_dict(orient='records')
+    return category_sum
 
 
 def calculate_income(df):
@@ -43,7 +43,7 @@ def calculate_income(df):
     result_df = result_df.drop(columns=['transaction_type'])
     category_sum = result_df.groupby('category')['amount'].sum()
     category_sum = category_sum.reset_index()
-    return category_sum.to_dict(orient='records')
+    return category_sum
 
 
 def get_histories():

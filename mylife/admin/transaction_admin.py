@@ -13,6 +13,7 @@ from import_export.widgets import ForeignKeyWidget
 from mylife.models import TransactionType, TransactionCategory, Merchant, Transaction, Location, UtilityType, \
     UtilityTransaction
 from mylife.services import get_trans_df, calculate_expense, calculate_income, get_utility_df_for_queryset
+from mylife.utilities import load_pie_chart
 
 
 def bulk_edit_category(modeladmin, request, queryset):
@@ -202,8 +203,19 @@ class TransactionAdmin(ImportExportModelAdmin, admin.ModelAdmin):
         df = get_trans_df(request)
         expense = calculate_expense(df)
         income = calculate_income(df)
-        extra_context['expense'] = expense
-        extra_context['income'] = income
+        total_expense = expense['amount'].sum()
+        total_income = income['amount'].sum()
+        expense.rename(columns={'category': 'label',
+                                'amount': 'value'}, inplace=True)
+        expense_chart = load_pie_chart(expense)
+        income.rename(columns={'category': 'label',
+                               'amount': 'value'}, inplace=True)
+        income_chart = load_pie_chart(income)
+        extra_context['expense'] = total_expense
+        extra_context['income'] = total_income
+        extra_context['cash_flow'] = round(total_income - total_expense, 2)
+        extra_context['expense_chart'] = expense_chart
+        extra_context['income_chart'] = income_chart
 
         return super(TransactionAdmin, self).changelist_view(request, extra_context)
 

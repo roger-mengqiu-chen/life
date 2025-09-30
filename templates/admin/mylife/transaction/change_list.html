@@ -2,119 +2,36 @@
 
 {% block content %}
     <h1 id="cashFlowTitle">Cash Flow</h1>
-    <h2 id="cashFlow"></h2>
+    <h2>{{ cash_flow }}</h2>
     <h1>Income</h1>
-    <h2 id="income"></h2>
+    <h2>{{ income }}</h2>
     <h1>Expense</h1>
-    <h2 id="expense"></h2>
+    <h2>{{ expense }}</h2>
     <div>
         <div style="display: block;
-                    box-sizing: border-box;
-                    height: 500px;
-                    width: 500px;">
-            <canvas id="myExpenseChart"></canvas>
+                    box-sizing: border-box;">
+            <div id="myExpenseChart"></div>
         </div>
         <div style="display: block;
-                    box-sizing: border-box;
-                    height: 500px;
-                    width: 500px">
-            <canvas id="myIncomeChart"></canvas>
+                    box-sizing: border-box;">
+            <div id="myIncomeChart"></div>
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
     <script>
-        const cashFlowTitle = document.getElementById("cashFlowTitle");
-        const today = new Date();
-        const thisYear = today.getFullYear();
-        cashFlowTitle.innerText = thisYear + " Cash Flow";
-        const ctx = document.getElementById('myExpenseChart');
+        const expenseChart = {{ expense_chart|safe }};
+        const incomeChart = {{ income_chart|safe }};
+        const expenseEle = document.querySelector('#myExpenseChart');
+        const incomeEle = document.querySelector('#myIncomeChart');
 
-        let expenses = "{{ expense|safe }}".replace(/'/g, '"');
-        let incomes = "{{ income|safe }}".replace(/'/g, '"');
-        let expense_data = JSON.parse(expenses);
-        let income_data = JSON.parse(incomes);
+        const expenseData = expenseChart.data;
+        const expenseLayout = expenseChart.layout;
+        const incomeData = incomeChart.data;
+        const incomeLayout = incomeChart.layout;
 
-        let expense_x = expense_data.map(item => item["category"]);
-        let expense_y = expense_data.map(item => item["amount"]);
-        let total_expense = expense_y.reduce((sum, val) => sum + val, 0);
-        let expense_color = expense_data.map(item => item["color"]);
-        let expense_chart_data = {
-            labels: expense_x,
-            datasets: [{
-                data: expense_y,
-                backgroundcolor: expense_color
-            }]
-        }
-
-        let income_x = income_data.map(item => item["category"]);
-        let income_y = income_data.map(item => item["amount"]);
-        let total_income = income_y.reduce((sum, val) => sum + val, 0);
-        let income_color = income_data.map(item => item["color"]);
-        let income_chart_data = {
-            labels: income_x,
-            datasets: [{
-                data: income_y,
-                backgroundcolor: income_color
-            }]
-        };
-
-        const cashFlow = document.getElementById("cashFlow");
-        const incomeEle = document.getElementById("income");
-        const expenseEle = document.getElementById("expense");
-        cashFlow.innerText = parseFloat((total_income - total_expense).toFixed(2)).toLocaleString('en-US');
-        incomeEle.innerText = parseFloat(total_income.toFixed(2)).toLocaleString('en-US');
-        expenseEle.innerText = parseFloat(total_expense.toFixed(2)).toLocaleString('en-US');
-
-        new Chart(ctx, {
-            type: 'pie',
-            data: expense_chart_data,
-            options: {
-            plugins: {
-                title: {
-                  display: true,
-                  text: 'Expense'
-                },
-                datalabels: {
-                    color: 'black', // Label text color
-                    formatter: (value, context) => {
-                        return ((value / total_expense) * 100).toFixed(1) + "%";
-                    },
-                    font: {
-                        weight: 'bold',
-                        size: 14
-                    }
-                }
-            }
-        },
-        plugins: [ChartDataLabels]
-        });
-
-        const income_ctx = document.getElementById('myIncomeChart');
-        new Chart(income_ctx, {
-            type: 'pie',
-            data: income_chart_data,
-            options: {
-            plugins: {
-                title: {
-                  display: true,
-                  text: 'Income'
-                },
-                datalabels: {
-                    color: 'black', // Label text color
-                    formatter: (value, context) => {
-                        let percentage = ((value / total_income) * 100).toFixed(1) + "%";
-                        return percentage;
-                    },
-                    font: {
-                        weight: 'bold',
-                        size: 14
-                    }
-                }
-            }
-        },
-        plugins: [ChartDataLabels]
-        });
+        Plotly.newPlot('myExpenseChart', expenseData, expenseLayout);
+        Plotly.newPlot('myIncomeChart', incomeData, incomeLayout);
 
     </script>
 
