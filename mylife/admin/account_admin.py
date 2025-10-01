@@ -120,7 +120,7 @@ class HistoryAdmin(admin.ModelAdmin):
 
 @admin.register(Investment)
 class InvestmentAdmin(admin.ModelAdmin):
-    list_display = ('account', 'due_date', 'amount', 'interest_rate')
+    list_display = ('account', 'start_date', 'due_date', 'amount', 'interest_rate')
     search_fields = ('account__name', 'due_date')
     list_filter = ('account',)
     autocomplete_fields = ('account',)
