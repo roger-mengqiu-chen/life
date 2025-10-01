@@ -20,3 +20,22 @@ def load_pie_chart(df):
     )
     graphJSON = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
     return graphJSON
+
+
+def load_line_chart(df):
+    fig = go.Figure(
+        [go.Scatter(
+            x=df['date'],
+            y=df['value'],
+        )]
+    )
+    fig.update_yaxes(
+        tickformat=',.2f',
+    )
+
+    fig.update_layout(
+        width=1500,
+        height=700
+    )
+    graphJSON = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
+    return graphJSON

@@ -3,93 +3,27 @@
 {% block content %}
   <div>
     <div style="display: block;
-                box-sizing: border-box;
-                height: 500px;
-                width: 500px;">
-        <canvas id="netWorthChart"></canvas>
+                box-sizing: border-box;">
+        <div id="netWorthChart"></div>
     </div>
     <div style="display: block;
-                box-sizing: border-box;
-                height: 500px;
-                width: 500px">
-        <canvas id="investmentChart"></canvas>
+                box-sizing: border-box;">
+        <div id="investmentChart"></div>
     </div>
   </div>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
   <script>
-    const netWorthCtx = document.getElementById('netWorthChart');
+    const netWorthChart = {{ net_worth|safe }};
+    const investmentChart = {{ investment|safe }};
+    const netWorthEle = document.getElementById("netWorthChart");
+    const investmentEle = document.getElementById("investmentChart");
 
-    let netWorth = "{{ net_worth|safe }}".replace(/'/g, '"');
-    let netWorth_data = JSON.parse(netWorth);
+    const netWorthData = netWorthChart.data;
+    const netWorthLayout = netWorthChart.layout;
+    const investmentData = investmentChart.data;
+    const investmentLayout = investmentChart.layout;
 
-    let netWorth_x = netWorth_data.map(item => item["date"]);
-    let netWorth_y = netWorth_data.map(item => item["net_worth"]);
-
-    let netWorthChartData = {
-      labels: netWorth_x,
-      datasets: [{
-        label: 'Net Worth',
-        data: netWorth_y,
-        tension: 0.4
-      }]
-    }
-
-    new Chart(netWorthCtx, {
-      type: 'line',
-      data: netWorthChartData,
-      options: {
-        responsive: true,
-        plugins: {
-          legend: {
-            display: true
-          },
-          datalabels: {
-            color: '#36A2EB',
-            formatter: (value, context) => {
-              return value.toFixed(2);
-            }
-          }
-        }
-      }
-    });
-  </script>
-  <script>
-    const investmentCtx = document.getElementById('investmentChart');
-
-    let investment = "{{ investment|safe }}".replace(/'/g, '"');
-    let investment_data = JSON.parse(investment);
-
-    let investment_x = investment_data.map(item => item["date"]);
-    let investment_y = investment_data.map(item => item["investment_sum"]);
-
-    let investmentData = {
-      labels: investment_x,
-      datasets: [{
-        label: 'Investment',
-        data: investment_y,
-        tension: 0.4
-      }]
-    }
-
-    new Chart(investmentCtx, {
-      type: 'line',
-      data: investmentData,
-      options: {
-        responsive: true,
-        plugins: {
-          legend: {
-            display: true
-          },
-          datalabels: {
-            color: '#36A2EB',
-            formatter: (value, context) => {
-              return value.toFixed(2);
-            }
-          }
-        }
-      }
-    });
+    Plotly.newPlot('netWorthChart', netWorthData, netWorthLayout);
+    Plotly.newPlot('investmentChart', investmentData, investmentLayout);
   </script>
 {{ block.super }}
 {% endblock %}

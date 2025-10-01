@@ -55,8 +55,10 @@ def get_histories():
     df.rename(columns={'existing_sum': 'net_worth'}, inplace=True)
 
     networth_df = df[['date', 'net_worth']]
+    networth_df.rename(columns={'net_worth': 'value'}, inplace=True)
     investment_df = df[['date', 'investment_sum']]
-    return networth_df.to_dict(orient='records'), investment_df.to_dict(orient='records')
+    investment_df.rename(columns={'investment_sum': 'value'}, inplace=True)
+    return networth_df, investment_df
 
 
 def get_investment_by_account_due_date():

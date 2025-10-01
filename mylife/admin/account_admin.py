@@ -4,6 +4,7 @@ from django.forms import BaseInlineFormSet
 
 from mylife.models import AccountType, Account, AccountHistory, History, Bank, Investment
 from mylife.services import get_histories, get_investment_by_account_due_date
+from mylife.utilities import load_line_chart
 
 
 @admin.register(AccountType)
@@ -112,6 +113,8 @@ class HistoryAdmin(admin.ModelAdmin):
     def changelist_view(self, request, extra_context=None):
         extra_context = extra_context or {}
         net_worth, investment = get_histories()
+        net_worth = load_line_chart(net_worth)
+        investment = load_line_chart(investment)
         extra_context['net_worth'] = net_worth
         extra_context['investment'] = investment
 
