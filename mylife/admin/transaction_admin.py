@@ -211,8 +211,8 @@ class TransactionAdmin(ImportExportModelAdmin, admin.ModelAdmin):
         income.rename(columns={'category': 'label',
                                'amount': 'value'}, inplace=True)
         income_chart = load_pie_chart(income)
-        extra_context['expense'] = total_expense
-        extra_context['income'] = total_income
+        extra_context['expense'] = round(total_expense, 2)
+        extra_context['income'] = round(total_income, 2)
         extra_context['cash_flow'] = round(total_income - total_expense, 2)
         extra_context['expense_chart'] = expense_chart
         extra_context['income_chart'] = income_chart
