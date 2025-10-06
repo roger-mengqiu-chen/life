@@ -8,6 +8,7 @@ def get_trans_df(request):
     dict_query = request.GET.dict()
     dict_query.pop('p', None)
     dict_query.pop('o', None)
+    dict_query.pop('all', None)
     this_year_start = datetime.today().replace(month=1, day=1).date()
     this_year_end = datetime.today().replace(month=12, day=31).date()
     dict_query['transaction_time__gte'] = dict_query.pop('transaction_time__range__gte', this_year_start)
