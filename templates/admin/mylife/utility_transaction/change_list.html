@@ -6,83 +6,28 @@
                 box-sizing: border-box;
                 height: 80%;
                 width: 100%;">
-        <canvas id="transactionChart"></canvas>
+        <div id="usageChart"></div>
     </div>
     <div style="display: block;
                 box-sizing: border-box;
                 height: 80%;
                 width: 100%">
-        <canvas id="costChart"></canvas>
+        <div id="costChart"></div>
     </div>
   </div>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
   <script>
-    const netWorthCtx = document.getElementById('transactionChart');
-    const costCtx = document.getElementById('costChart');
+    const usageChart = {{ usage|safe }};
+    const costChart = {{ cost|safe }};
+    const usageChartEle = document.getElementById('usageChart');
+    const costChartEle = document.getElementById('costChart');
 
-    let transactions = "{{ transactions|safe }}".replace(/'/g, '"');
-    let transactionData = JSON.parse(transactions);
+    const usageData = usageChart.data;
+    const usageLayout = usageChart.layout;
+    const costData = costChart.data;
+    const costLayout = costChart.layout;
 
-    let transactionX = transactionData.map(item => item["date"]);
-    let transactionY = transactionData.map(item => item["usage"]);
-    let costY = transactionData.map(item => item["cost_per_unit"]);
-
-    let transactionChartData = {
-      labels: transactionX,
-      datasets: [{
-        label: 'Usage',
-        data: transactionY,
-        tension: 0.4
-      }]
-    }
-
-    let costChartData = {
-        labels: transactionX,
-        datasets: [{
-          label: 'Cost',
-          data: costY,
-          tension: 0.4,
-        }]
-    }
-
-    new Chart(netWorthCtx, {
-      type: 'line',
-      data: transactionChartData,
-      options: {
-        responsive: true,
-        plugins: {
-          legend: {
-            display: true
-          },
-          datalabels: {
-            color: '#36A2EB',
-            formatter: (value, context) => {
-              return value.toFixed(2);
-            }
-          }
-        }
-      }
-    });
-
-    new Chart(costCtx, {
-      type: 'line',
-      data: costChartData,
-      options: {
-        responsive: true,
-        plugins: {
-          legend: {
-            display: true
-          },
-          datalabels: {
-            color: '#36A2EB',
-            formatter: (value, context) => {
-              return value.toFixed(2);
-            }
-          }
-        }
-      }
-    });
+    Plotly.newPlot('usageChart', usageData, usageLayout);
+    Plotly.newPlot('costChart', costData, costLayout);
   </script>
 {{ block.super }}
 {% endblock %}

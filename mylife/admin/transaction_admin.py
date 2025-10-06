@@ -13,7 +13,7 @@ from import_export.widgets import ForeignKeyWidget
 from mylife.models import TransactionType, TransactionCategory, Merchant, Transaction, Location, UtilityType, \
     UtilityTransaction
 from mylife.services import get_trans_df, calculate_expense, calculate_income, get_utility_df_for_queryset
-from mylife.utilities import load_pie_chart
+from mylife.utilities import load_pie_chart, load_line_chart
 
 
 def bulk_edit_category(modeladmin, request, queryset):
@@ -244,7 +244,7 @@ class UtilityTransactionAdmin(admin.ModelAdmin):
         for k, v in qd.items() :
             query_dict[k] = v[0]
         queryset = UtilityTransaction.objects.filter(**query_dict)
-        df = get_utility_df_for_queryset(queryset)
-        extra_context['transactions'] = df
-
+        usage_df, cost_df = get_utility_df_for_queryset(queryset)
+        extra_context['usage'] = load_line_chart(usage_df)
+        extra_context['cost'] = load_line_chart(cost_df)
         return super(UtilityTransactionAdmin, self).changelist_view(request, extra_context)
