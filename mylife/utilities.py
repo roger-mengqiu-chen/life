@@ -9,7 +9,7 @@ def load_pie_chart(df):
         values=df['value'],
         hoverinfo='label+percent+value',
         textinfo='label+percent+value',
-        textposition='inside',
+        textposition='auto',
     )
 
     fig = go.Figure(data=[pie])
