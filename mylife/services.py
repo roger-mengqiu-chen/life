@@ -11,8 +11,8 @@ def get_trans_df(request):
     dict_query.pop('all', None)
     this_year_start = datetime.today().replace(month=1, day=1).date()
     this_year_end = datetime.today().replace(month=12, day=31).date()
-    dict_query['transaction_time__gte'] = dict_query.pop('transaction_time__range__gte', this_year_start)
-    dict_query['transaction_time__lte'] = dict_query.pop('transaction_time__range__lte', this_year_end)
+    dict_query['transaction_time__gte'] = dict_query.pop('transaction_time__range__gte', None)
+    dict_query['transaction_time__lte'] = dict_query.pop('transaction_time__range__lte', None)
     kwargs = {}
     for k, v in dict_query.items():
         if v is not None:
