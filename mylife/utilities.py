@@ -8,7 +8,7 @@ def load_pie_chart(df):
         labels=df['label'],
         values=df['value'],
         hoverinfo='label+percent+value',
-        textinfo='label+percent',
+        textinfo='label+percent+value',
         textposition='inside',
     )
 
