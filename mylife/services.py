@@ -15,7 +15,7 @@ def get_trans_df(request):
     dict_query['transaction_time__lte'] = dict_query.pop('transaction_time__range__lte', None)
     kwargs = {}
     for k, v in dict_query.items():
-        if v is not None:
+        if v is not None or v != '':
             kwargs[k] = v
 
     last_month_expense = list(Transaction.objects.filter(**kwargs).exclude(
