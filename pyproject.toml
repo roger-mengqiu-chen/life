@@ -5,6 +5,7 @@ description = "App tracking my life events and financial situation"
 requires-python = ">=3.12"
 dependencies = [
     "django==5.2.6",
+    "django-admin-multi-select-filter>=1.5.0",
     "django-admin-rangefilter==0.13.3",
     "django-import-export==4.3.9",
     "djangorestframework==3.16.1",
