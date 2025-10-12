@@ -2,7 +2,14 @@ from django.contrib import admin
 from django.contrib.humanize.templatetags.humanize import intcomma
 from django.forms import BaseInlineFormSet
 
-from mylife.models import AccountType, Account, AccountHistory, History, Bank, Investment
+from mylife.models import (
+    AccountType,
+    Account,
+    AccountHistory,
+    History,
+    Bank,
+    Investment
+)
 from mylife.services import get_histories, get_investment_by_account_due_date
 from mylife.utilities import load_line_chart
 
@@ -25,7 +32,7 @@ class BankAdmin(admin.ModelAdmin):
 
 @admin.register(Account)
 class AccountAdmin(admin.ModelAdmin):
-    list_display = ('name', 'account_no','bank', 'type', 'is_active')
+    list_display = ('name', 'account_no', 'bank', 'type', 'is_active')
     search_fields = ('name', 'account_no', 'bank', 'type__name')
     autocomplete_fields = ('type',)
     ordering = ('name', )
@@ -43,10 +50,13 @@ class AccountHistoryInlineFormSet(BaseInlineFormSet):
             self.initial = initial_data
             self.extra = len(initial_data)
         else:
-            all_accounts = self.instance.accounthistory_set.all().order_by('account__name')
+            all_accounts = (
+                self.instance.accounthistory_set.all().order_by('account__name')
+            )
             initial_data = []
             for account in all_accounts:
-                initial_data.append({'account': account.account, 'account_amount': account.account_amount})
+                initial_data.append({'account': account.account,
+                                     'account_amount': account.account_amount})
             self.initial = initial_data
 
     def save_new(self, form, commit=True):
@@ -76,7 +86,9 @@ class AccountHistoryInline(admin.TabularInline):
 @admin.register(History)
 class HistoryAdmin(admin.ModelAdmin):
     inlines = (AccountHistoryInline, )
-    list_display = ('date', 'existing_total', 'investment_total', 'total', 'wire_transfer_total',)
+    list_display = ('date', 'existing_total',
+                    'investment_total', 'total',
+                    'wire_transfer_total',)
     ordering = ('-date', )
     change_list_template = 'admin/mylife/history/change_list.html'
 

@@ -120,7 +120,7 @@ class AccountType(models.Model):
 
     def __str__(self):
         return self.name
-    
+
 
 class Bank(models.Model):
     name = models.CharField(max_length=255)
@@ -138,7 +138,7 @@ class Account(models.Model):
 
     def __str__(self):
         return self.name
-    
+
 
 class Investment(models.Model):
     account = models.ForeignKey(Account, on_delete=models.PROTECT)
@@ -161,7 +161,9 @@ class History(models.Model):
     sum = models.FloatField(default=0, blank=True)
     wire_transfer_sum = models.FloatField(default=0, blank=True)
     investment_sum = models.FloatField(default=0, blank=True)
-    existing_sum = models.FloatField(default=0, blank=True, help_text="Existing sum is total - car/house")
+    existing_sum = models.FloatField(default=0,
+                                     blank=True,
+                                     help_text="Existing sum is total - car/house")
 
     class Meta:
         verbose_name_plural = "Histories"
@@ -180,7 +182,7 @@ class History(models.Model):
                 investment_total += account_history.account_amount
 
             if (account_history.account.name.lower() == 'car'
-                or account_history.account.name.lower() == 'house'):
+                    or account_history.account.name.lower() == 'house'):
                 car_house += account_history.account_amount
         self.sum = round(total, 2)
         self.investment_sum = round(investment_total, 2)

@@ -10,9 +10,21 @@ from import_export import resources, fields
 from import_export.admin import ImportExportModelAdmin
 from import_export.widgets import ForeignKeyWidget
 
-from mylife.models import TransactionType, TransactionCategory, Merchant, Transaction, Location, UtilityType, \
+from mylife.models import (
+    TransactionType,
+    TransactionCategory,
+    Merchant,
+    Transaction,
+    Location,
+    UtilityType,
     UtilityTransaction
-from mylife.services import get_trans_df, calculate_expense, calculate_income, get_utility_df_for_queryset
+)
+from mylife.services import (
+    get_trans_df,
+    calculate_expense,
+    calculate_income,
+    get_utility_df_for_queryset
+)
 from mylife.utilities import load_pie_chart, load_line_chart
 
 
@@ -22,14 +34,17 @@ def bulk_edit_category(modeladmin, request, queryset):
 
         # Check if a new value was provided
         if not new_value:
-            modeladmin.message_user(request, "Error: A new value must be provided.", level='ERROR')
+            modeladmin.message_user(request,
+                                    "Error: A new value must be provided.",
+                                    level='ERROR')
             return
 
         # Update the selected records
         updated_count = queryset.update(category=new_value)
 
         # Display a success message
-        modeladmin.message_user(request, f"{updated_count} records were successfully updated.")
+        modeladmin.message_user(request,
+                                f"{updated_count} records were successfully updated.")
         return
 
     categories = TransactionCategory.objects.all()
@@ -42,6 +57,7 @@ def bulk_edit_category(modeladmin, request, queryset):
     }
     return render(request, 'admin/bulk_edit_template.html', context)
 
+
 bulk_edit_category.short_description = "Bulk edit category"
 
 
@@ -51,14 +67,17 @@ def bulk_edit_merchant(modeladmin, request, queryset):
 
         # Check if a new value was provided
         if not new_value:
-            modeladmin.message_user(request, "Error: A new value must be provided.", level='ERROR')
+            modeladmin.message_user(request,
+                                    "Error: A new value must be provided.",
+                                    level='ERROR')
             return
 
         # Update the selected records
         updated_count = queryset.update(merchant=new_value)
 
         # Display a success message
-        modeladmin.message_user(request, f"{updated_count} records were successfully updated.")
+        modeladmin.message_user(request,
+                                f"{updated_count} records were successfully updated.")
         return
 
     merchants = Merchant.objects.all()
@@ -70,6 +89,7 @@ def bulk_edit_merchant(modeladmin, request, queryset):
         'model_meta': modeladmin.model._meta,
     }
     return render(request, 'admin/bulk_edit_template.html', context)
+
 
 bulk_edit_merchant.short_description = "Bulk edit merchant"
 
@@ -184,7 +204,10 @@ class TransactionAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     autocomplete_fields = ('transaction_type', 'category', 'merchant')
     resource_class = TransactionSource
     ordering = ('-transaction_time', )
-    list_filter = (('transaction_time', DateRangeFilter), 'transaction_type', 'category', 'merchant', )
+    list_filter = (('transaction_time', DateRangeFilter),
+                   'transaction_type',
+                   'category',
+                   'merchant', )
     change_list_template = 'admin/mylife/transaction/change_list.html'
     actions = [bulk_edit_category, bulk_edit_merchant]
 
@@ -241,10 +264,11 @@ class UtilityTransactionAdmin(admin.ModelAdmin):
         extra_context = extra_context or {}
         qd = request.GET.copy()
         query_dict = {}
-        for k, v in qd.items() :
+        for k, v in qd.items():
             query_dict[k] = v[0]
         queryset = UtilityTransaction.objects.filter(**query_dict)
         usage_df, cost_df = get_utility_df_for_queryset(queryset)
         extra_context['usage'] = load_line_chart(usage_df)
         extra_context['cost'] = load_line_chart(cost_df)
-        return super(UtilityTransactionAdmin, self).changelist_view(request, extra_context)
+        return (super(UtilityTransactionAdmin, self)
+                .changelist_view(request, extra_context))

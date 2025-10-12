@@ -16,7 +16,7 @@ class GenderAdmin(admin.ModelAdmin):
 
     def has_module_permission(self, request):
         return False
-    
+
 
 @admin.register(Person)
 class PersonAdmin(admin.ModelAdmin):
