@@ -21,12 +21,22 @@ class NewsAdmin(admin.ModelAdmin):
     ordering = ('date', 'title')
     search_fields = ('title',)
 
+
+class StockTransactionInline(admin.TabularInline):
+    model = StockTransaction
+    fields = readonly_fields = ('date', 'qty', 'price', 'cost', 'fear_level', 'note',)
+    extra = 0
+    can_delete = False
+
+
 @admin.register(Stock)
 class StockAdmin(admin.ModelAdmin):
     list_display = ('symbol', 'total_qty', 'sector', 'total_market_value', 'earnings')
     list_filter = ('sector',)
     ordering = ('symbol',)
     search_fields = ('symbol',)
+    inlines = (StockTransactionInline,)
+
 
 
 @admin.register(StockTransaction)
