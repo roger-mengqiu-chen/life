@@ -20,6 +20,12 @@ class Stock(models.Model):
     def __str__(self):
         return self.symbol
 
+    def save(self, *args, **kwargs):
+        transactions = self.stocktransaction_set.all()
+        self.total_qty = transactions.aggregate(models.Sum('qty'))['qty__sum']
+        self.total_market_value = self.current_price * self.total_qty
+        self.total_cost = transactions.aggregate(models.Sum('price'))['price__sum']
+
 
 class News(models.Model):
     title = models.CharField(max_length=255)
@@ -39,9 +45,14 @@ class StockTransaction(models.Model):
     qty = models.DecimalField(max_digits=20, decimal_places=2)
     date = models.DateField()
     price = models.DecimalField(max_digits=20, decimal_places=2)
+    cost = models.DecimalField(default=0, max_digits=20, decimal_places=2)
     fear_level = models.IntegerField()
     note = models.TextField()
     news = models.ManyToManyField(News)
 
     def __str__(self):
         return f'{self.stock}: {self.qty} {self.date}'
+
+    def save(self, *args, **kwargs):
+        self.cost = self.qty * self.price
+        super().save(*args, **kwargs)
