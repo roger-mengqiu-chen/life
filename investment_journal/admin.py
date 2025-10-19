@@ -31,5 +31,5 @@ class StockAdmin(admin.ModelAdmin):
 
 @admin.register(StockTransaction)
 class StockTransactionAdmin(admin.ModelAdmin):
-    list_display = ('stock', 'qty', 'date', 'price', 'fear_level')
+    list_display = ('stock', 'date', 'qty', 'price', 'cost', 'fear_level')
     autocomplete_fields = ('stock',)
