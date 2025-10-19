@@ -35,7 +35,7 @@ class News(models.Model):
     title = models.CharField(max_length=255)
     date = models.DateField()
     sector = models.ForeignKey(Sector, on_delete=models.CASCADE)
-    content = models.TextField()
+    content = models.TextField(blank=True, null=True)
 
     def __str__(self):
         return f"{self.date} - {self.title}"
@@ -51,7 +51,7 @@ class StockTransaction(models.Model):
     price = models.DecimalField(max_digits=20, decimal_places=2)
     cost = models.DecimalField(default=0, max_digits=20, decimal_places=2)
     fear_level = models.IntegerField()
-    note = models.TextField()
+    note = models.TextField(blank=True, null=True)
     news = models.ManyToManyField(News)
 
     def __str__(self):
