@@ -31,7 +31,7 @@ class StockTransactionInline(admin.TabularInline):
 
 @admin.register(Stock)
 class StockAdmin(admin.ModelAdmin):
-    list_display = ('symbol', 'total_qty', 'sector', 'total_market_value', 'earnings')
+    list_display = ('symbol', 'total_qty', 'sector', 'total_cost', 'total_market_value', 'earnings')
     list_filter = ('sector',)
     ordering = ('symbol',)
     search_fields = ('symbol',)
