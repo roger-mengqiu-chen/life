@@ -21,8 +21,9 @@ class Stock(models.Model):
         return self.symbol
 
     def save(self, *args, **kwargs):
-        transactions = self.stocktransaction_set.all()
+
         if self.pk:
+            transactions = self.stocktransaction_set.all()
             self.total_qty = transactions.aggregate(models.Sum('qty'))['qty__sum']
             self.total_market_value = self.current_price * self.total_qty
             self.total_cost = transactions.aggregate(models.Sum('cost'))['price__sum']
