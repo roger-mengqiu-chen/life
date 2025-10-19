@@ -30,6 +30,9 @@ class News(models.Model):
     def __str__(self):
         return f"{self.date} - {self.title}"
 
+    class Meta:
+        verbose_name_plural = "News"
+
 
 class StockTransaction(models.Model):
     stock = models.ForeignKey(Stock, on_delete=models.CASCADE)
