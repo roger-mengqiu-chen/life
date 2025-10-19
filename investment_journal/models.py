@@ -24,7 +24,8 @@ class Stock(models.Model):
         transactions = self.stocktransaction_set.all()
         self.total_qty = transactions.aggregate(models.Sum('qty'))['qty__sum']
         self.total_market_value = self.current_price * self.total_qty
-        self.total_cost = transactions.aggregate(models.Sum('price'))['price__sum']
+        self.total_cost = transactions.aggregate(models.Sum('cost'))['price__sum']
+        super().save(*args, **kwargs)
 
 
 class News(models.Model):
