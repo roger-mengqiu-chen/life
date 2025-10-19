@@ -12,8 +12,8 @@ class Stock(models.Model):
     symbol = models.CharField(max_length=50, unique=True)
     sector = models.ForeignKey(Sector, on_delete=models.CASCADE)
     current_price = models.DecimalField(max_digits=10, decimal_places=2)
-    total_qty = models.DecimalField(max_digits=20, blank=True, decimal_places=2)
-    total_market_value = models.DecimalField(max_digits=20, blank=True, decimal_places=2)
+    total_qty = models.DecimalField(default=0, max_digits=20, blank=True, decimal_places=2)
+    total_market_value = models.DecimalField(default=0, max_digits=20, blank=True, decimal_places=2)
     total_cost = models.DecimalField(default=0, max_digits=20, decimal_places=2)
     earnings = models.DecimalField(default=0, max_digits=20, decimal_places=2)
 
