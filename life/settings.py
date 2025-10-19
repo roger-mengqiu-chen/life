@@ -22,7 +22,8 @@ INSTALLED_APPS = [
     'import_export',
     'rest_framework',
     'rangefilter',
-    'mylife'
+    'mylife',
+    'investment_journal',
 ]
 
 MIDDLEWARE = [
