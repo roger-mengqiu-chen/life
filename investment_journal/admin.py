@@ -20,7 +20,7 @@ class NewsAdmin(admin.ModelAdmin):
 
 @admin.register(Stock)
 class StockAdmin(admin.ModelAdmin):
-    list_display = ('symbol', 'qty', 'sector', 'total_market_value', 'earnings')
+    list_display = ('symbol', 'total_qty', 'sector', 'total_market_value', 'earnings')
     list_filter = ('sector',)
 
 
