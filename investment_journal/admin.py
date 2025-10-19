@@ -43,3 +43,5 @@ class StockAdmin(admin.ModelAdmin):
 class StockTransactionAdmin(admin.ModelAdmin):
     list_display = ('stock', 'date', 'qty', 'price', 'cost', 'fear_level')
     autocomplete_fields = ('stock',)
+    list_filter = ('stock',)
+
