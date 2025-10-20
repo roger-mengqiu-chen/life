@@ -31,8 +31,8 @@ class StockTransactionInline(admin.TabularInline):
 
 @admin.register(Stock)
 class StockAdmin(admin.ModelAdmin):
-    list_display = ('symbol', 'total_qty', 'sector', 'total_cost', 'total_market_value', 'earnings', 'earning_rate')
-    readonly_fields = ('total_qty', 'total_market_value', 'total_cost', 'earnings', 'earning_rate')
+    list_display = ('symbol', 'total_qty', 'sector', 'total_cost', 'total_market_value', 'earnings', 'earning_rate', 'realized_return',)
+    readonly_fields = ('total_qty', 'total_market_value', 'total_cost', 'earnings', 'earning_rate', 'realized_return',)
     list_filter = ('sector',)
     ordering = ('symbol',)
     search_fields = ('symbol',)

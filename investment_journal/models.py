@@ -26,14 +26,18 @@ class Stock(models.Model):
         return self.symbol
 
     def save(self, *args, **kwargs):
-
         if self.pk:
             transactions = self.stocktransaction_set.all()
-            self.total_qty = transactions.aggregate(models.Sum('qty'))['qty__sum']
+            sold_transactions = transactions.filter(cost__lt=0)
+            self.total_qty = transactions.filter(cost__gt=0).aggregate(models.Sum('qty'))['qty__sum'] + sold_transactions.aggregate(models.Sum('qty'))['qty__sum']
             self.total_market_value = self.current_price * self.total_qty
             self.total_cost = transactions.filter(cost__gt=0).aggregate(models.Sum('cost'))['cost__sum']
-            self.realized_return = -transactions.filter(cost__lt=0).aggregate(models.Sum('cost'))['cost__sum']
-            self.earnings = self.total_market_value - self.total_cost
+
+            if sold_transactions.exists():
+                self.realized_return = -transactions.filter(cost__lt=0).aggregate(models.Sum('cost'))['cost__sum']
+            else:
+                self.realized_return = 0
+            self.earnings = self.total_market_value - self.total_cost + self.realized_return
             self.earning_rate = self.earnings / self.total_cost * 100
         super().save(*args, **kwargs)
 
