@@ -17,6 +17,7 @@ class Stock(models.Model):
     total_cost = models.DecimalField(default=0, max_digits=20, decimal_places=2)
     earnings = models.DecimalField(default=0, max_digits=20, decimal_places=2)
     earning_rate = models.DecimalField(default=0, max_digits=20, decimal_places=2)
+    realized_return = models.DecimalField(default=0, max_digits=20, decimal_places=2)
 
     class Media:
         js = ('js/investment_journal.js',)
@@ -30,7 +31,8 @@ class Stock(models.Model):
             transactions = self.stocktransaction_set.all()
             self.total_qty = transactions.aggregate(models.Sum('qty'))['qty__sum']
             self.total_market_value = self.current_price * self.total_qty
-            self.total_cost = transactions.aggregate(models.Sum('cost'))['cost__sum']
+            self.total_cost = transactions.filter(cost__gt=0).aggregate(models.Sum('cost'))['cost__sum']
+            self.realized_return = -transactions.filter(cost__lt=0).aggregate(models.Sum('cost'))['cost__sum']
             self.earnings = self.total_market_value - self.total_cost
             self.earning_rate = self.earnings / self.total_cost * 100
         super().save(*args, **kwargs)
