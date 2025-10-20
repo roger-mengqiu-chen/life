@@ -38,6 +38,10 @@ class StockAdmin(admin.ModelAdmin):
     search_fields = ('symbol',)
     inlines = (StockTransactionInline,)
 
+    class Media:
+        js = (
+            'js/investment_journal.js',
+        )
 
 
 @admin.register(StockTransaction)
