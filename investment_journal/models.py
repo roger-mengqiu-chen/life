@@ -12,6 +12,7 @@ class Stock(models.Model):
     symbol = models.CharField(max_length=50, unique=True)
     sector = models.ForeignKey(Sector, on_delete=models.CASCADE)
     current_price = models.DecimalField(max_digits=10, decimal_places=2)
+    average_cost = models.DecimalField(default=0, max_digits=10, decimal_places=2)
     total_qty = models.DecimalField(default=0, max_digits=20, blank=True, decimal_places=2)
     total_market_value = models.DecimalField(default=0, max_digits=20, blank=True, decimal_places=2)
     total_cost = models.DecimalField(default=0, max_digits=20, decimal_places=2)
@@ -39,10 +40,10 @@ class Stock(models.Model):
 
             self.total_qty = transactions.filter(cost__gt=0).aggregate(models.Sum('qty'))['qty__sum'] + sold_qty
             self.total_market_value = self.current_price * self.total_qty
-            self.total_cost = transactions.filter(cost__gt=0).aggregate(models.Sum('cost'))['cost__sum']
+            self.total_cost = self.average_cost * self.total_qty
 
-            self.earnings = self.total_market_value - self.total_cost + self.realized_return
-            self.earning_rate = self.earnings / self.total_cost * 100
+            self.earnings = (self.current_price - self.average_cost) * self.total_qty
+            self.earning_rate = (self.current_price - self.average_cost) / self.average_cost * 100
         super().save(*args, **kwargs)
 
 
