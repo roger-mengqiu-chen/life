@@ -139,7 +139,7 @@ class InvestmentAdmin(admin.ModelAdmin):
     search_fields = ('account__name', 'due_date')
     list_filter = ('account',)
     autocomplete_fields = ('account',)
-    ordering = ('account', 'due_date')
+    ordering = ('due_date',)
     change_list_template = 'admin/mylife/investment/change_list.html'
 
     def changelist_view(self, request, extra_context=None):
