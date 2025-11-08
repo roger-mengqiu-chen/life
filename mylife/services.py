@@ -65,7 +65,7 @@ def get_histories():
 def get_investment_by_account_due_date():
     values = Investment.objects.all().values('account__name', 'due_date', 'amount')
     df = pandas.DataFrame(values)
-    df = df[df['due_data'].isna() == False]
+    df = df[df['due_date'].isna() == False]
     df['year'] = df.apply(
         lambda x: x['due_date'].strftime('%Y'), axis=1
     )
