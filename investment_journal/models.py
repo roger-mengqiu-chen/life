@@ -68,7 +68,7 @@ class StockTransaction(models.Model):
     cost = models.DecimalField(default=0, max_digits=20, decimal_places=2)
     fear_level = models.IntegerField()
     note = models.TextField(blank=True, null=True)
-    news = models.ManyToManyField(News, blank=True, null=True)
+    news = models.ManyToManyField(News, blank=True)
 
     def __str__(self):
         return f'{self.stock}: {self.qty} {self.date}'
