@@ -54,7 +54,7 @@ def load_bar_chart(df):
         x='date',
         y='value',
         color='account',
-        barmode='group',
+        barmode='stack',
     )
 
     fig.update_layout(
@@ -62,6 +62,8 @@ def load_bar_chart(df):
             tickformat=',',
         ),
         xaxis=dict(
+            tickformat='%b %Y',
+            dtick='M1',
             range=[first_year_start, first_year_end],
             rangeslider=dict(
                 visible=True,
