@@ -5,62 +5,19 @@
     <div style="display: block;
                 box-sizing: border-box;
                 height: 500px;
-                width: 800px;">
-        <canvas id="investmentChart"></canvas>
+                width: 1500px;">
+      <div id="investmentChart"></div>
     </div>
   </div>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
   <script>
+    const investmentChart = {{ investment|safe }};
     const investmentCtx = document.getElementById('investmentChart');
 
-    let investment = "{{ investment|safe }}".replace(/'/g, '"');
-    let investmentJsonData = JSON.parse(investment);
-    const months = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"];
+    const investmentData = investmentChart.data;
+    const investmentLayout = investmentChart.layout;
 
-    const groupedData = {};
-    investmentJsonData.forEach(item => {
-      const key = `${item["year"]}-${item["account"]}`;
-      if (!groupedData[key]) {
-        groupedData[key] = { 
-          label: `${item["year"]} - ${item["account"]}`, 
-          data: Array(months.length).fill(0) };
-      }
-      const monthIndex = months.indexOf(item["month"]);
-      groupedData[key].data[monthIndex] = item["amount"];
-    });
+    Plotly.newPlot('investmentChart', investmentData, investmentLayout);
 
-    const dataSet = Object.values(groupedData).map(group => ({
-      label: group.label,
-      data: group.data,
-      stack: group.label.split(' - ')[0] // Stack by year
-    }));
-
-    let investmentData = {
-      labels: months,
-      datasets: dataSet
-    }
-
-    new Chart(investmentCtx, {
-      type: 'bar',
-      data: investmentData,
-      options: {
-        responsive: true,
-        plugins: {
-          legend: {
-            display: true
-          },
-          scales:{
-            x: {
-              stacked: true,
-            },
-            y: {
-              stacked: true,
-            }
-          }
-        }
-      }
-    });
   </script>
 
 {{ block.super }}

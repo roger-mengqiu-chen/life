@@ -66,15 +66,14 @@ def get_investment_by_account_due_date():
     values = Investment.objects.all().values('account__name', 'due_date', 'amount')
     df = pandas.DataFrame(values)
     df = df[df['due_date'].isna() == False]
-    df['year'] = df.apply(
-        lambda x: x['due_date'].strftime('%Y'), axis=1
-    )
-    df['month'] = df.apply(
-        lambda x: x['due_date'].strftime('%m'), axis=1
+    df['date'] = df.apply(
+        lambda x: x['due_date'].strftime('%Y-%m-01'), axis=1
     )
     df.drop(columns=['due_date'], inplace=True)
-    df.rename(columns={'account__name': 'account'}, inplace=True)
-    return df.to_dict(orient='records')
+    df.rename(columns={'account__name': 'account',
+                       'amount': 'value'},
+              inplace=True)
+    return df
 
 
 def get_utility_df_for_queryset(queryset):

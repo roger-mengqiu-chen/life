@@ -1,4 +1,8 @@
+from datetime import datetime, timedelta
+
+import pandas
 import plotly
+import plotly.express as px
 import plotly.graph_objects as go
 import json
 
@@ -18,8 +22,8 @@ def load_pie_chart(df):
         width=700,
         height=600,
     )
-    graphJSON = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
-    return graphJSON
+    graph_json = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
+    return graph_json
 
 
 def load_line_chart(df):
@@ -37,5 +41,33 @@ def load_line_chart(df):
         width=1500,
         height=700
     )
-    graphJSON = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
-    return graphJSON
+    graph_json = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
+    return graph_json
+
+
+def load_bar_chart(df):
+    first_year_start = df['date'].min()
+    first_year_end = datetime.strptime(first_year_start, '%Y-%m-%d').date() + pandas.DateOffset(years=1)
+    first_year_end = first_year_end.strftime('%Y-%m-%d')
+    fig = px.bar(
+        df,
+        x='date',
+        y='value',
+        color='account',
+        barmode='group',
+    )
+
+    fig.update_layout(
+        yaxis=dict(
+            tickformat=',',
+        ),
+        xaxis=dict(
+            range=[first_year_start, first_year_end],
+            rangeslider=dict(
+                visible=True,
+            )
+        )
+    )
+
+    graph_json = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
+    return graph_json

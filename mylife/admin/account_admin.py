@@ -11,7 +11,7 @@ from mylife.models import (
     Investment
 )
 from mylife.services import get_histories, get_investment_by_account_due_date
-from mylife.utilities import load_line_chart
+from mylife.utilities import load_line_chart, load_bar_chart
 
 
 @admin.register(AccountType)
@@ -145,6 +145,7 @@ class InvestmentAdmin(admin.ModelAdmin):
     def changelist_view(self, request, extra_context=None):
         extra_context = extra_context or {}
         investment = get_investment_by_account_due_date()
+        investment = load_bar_chart(investment)
         extra_context['investment'] = investment
 
         return super(InvestmentAdmin, self).changelist_view(request, extra_context)
