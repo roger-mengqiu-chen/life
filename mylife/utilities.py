@@ -27,19 +27,26 @@ def load_pie_chart(df):
 
 
 def load_line_chart(df):
+    first_year_start = df['date'].min()
+    first_year_end = datetime.strptime(first_year_start, '%Y-%m-%d').date() + pandas.DateOffset(years=1)
+    first_year_end = first_year_end.strftime('%Y-%m-%d')
     fig = go.Figure(
         [go.Scatter(
             x=df['date'],
             y=df['value'],
         )]
     )
-    fig.update_yaxes(
-        tickformat=',.2f',
-    )
 
     fig.update_layout(
         width=1500,
-        height=700
+        height=700,
+        yaxis=dict(tickformat=',.2f'),
+        xaxis=dict(
+            range=[first_year_start, first_year_end],
+            rangeslider=dict(
+                visible=True,
+            )
+        )
     )
     graph_json = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
     return graph_json
