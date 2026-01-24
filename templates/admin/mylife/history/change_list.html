@@ -21,9 +21,10 @@
     const netWorthLayout = netWorthChart.layout;
     const investmentData = investmentChart.data;
     const investmentLayout = investmentChart.layout;
+    const config = { responsive: true };
 
-    Plotly.newPlot('netWorthChart', netWorthData, netWorthLayout);
-    Plotly.newPlot('investmentChart', investmentData, investmentLayout);
+    Plotly.newPlot('netWorthChart', netWorthData, netWorthLayout, config);
+    Plotly.newPlot('investmentChart', investmentData, investmentLayout, config);
   </script>
 {{ block.super }}
 {% endblock %}

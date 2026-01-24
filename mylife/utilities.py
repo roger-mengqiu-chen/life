@@ -19,8 +19,7 @@ def load_pie_chart(df):
     fig = go.Figure(data=[pie])
     fig.update_layout(
         showlegend=True,
-        width=700,
-        height=600,
+        autosize=True,
     )
     graph_json = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
     return graph_json
@@ -38,14 +37,18 @@ def load_line_chart(df):
     )
 
     fig.update_layout(
-        width=1500,
-        height=700,
-        yaxis=dict(tickformat=',.2f'),
+        autosize=True,
+        yaxis=dict(
+            tickformat=',.2f',
+            fixedrange=False,
+            autorange=True,
+        ),
         xaxis=dict(
             range=[first_year_start, first_year_end],
             rangeslider=dict(
                 visible=True,
-            )
+            ),
+            type='date'
         )
     )
     graph_json = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
