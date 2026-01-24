@@ -80,7 +80,7 @@ def get_utility_df_for_queryset(queryset):
     values = queryset.values('year', 'month', 'days', 'amount', 'usage')
     df = pandas.DataFrame(values)
     df['date'] = df.apply(
-        lambda x: f'{int(x["year"])}-{int(x["month"])}', axis=1
+        lambda x: f'{int(x["year"])}-{int(x["month"])}-01', axis=1
     )
     df.drop(columns=['year', 'month'], inplace=True)
     usage_df = df[['date', 'usage']]
