@@ -19,7 +19,8 @@ def load_pie_chart(df):
     fig = go.Figure(data=[pie])
     fig.update_layout(
         showlegend=True,
-        autosize=True,
+        width=700,
+        height=600,
     )
     graph_json = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
     return graph_json
