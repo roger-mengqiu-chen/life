@@ -38,7 +38,6 @@ def load_line_chart(df):
     )
 
     fig.update_layout(
-        autosize=True,
         yaxis=dict(
             tickformat=',.2f',
             fixedrange=False,
