@@ -27,9 +27,10 @@ def load_pie_chart(df):
 
 
 def load_line_chart(df):
-    first_year_start = df['date'].min()
-    first_year_end = datetime.strptime(first_year_start, '%Y-%m-%d').date() + pandas.DateOffset(years=1)
-    first_year_end = first_year_end.strftime('%Y-%m-%d')
+    year_end = df['date'].max()
+    start = datetime.strptime(year_end, '%Y-%m-%d').date() - pandas.DateOffset(years=1)
+    end = datetime.strptime(year_end, '%Y-%m-%d').date()
+
     fig = go.Figure(
         [go.Scatter(
             x=df['date'],
@@ -44,7 +45,7 @@ def load_line_chart(df):
             autorange=True,
         ),
         xaxis=dict(
-            range=[first_year_start, first_year_end],
+            range=[start, end],
             rangeslider=dict(
                 visible=True,
             ),
