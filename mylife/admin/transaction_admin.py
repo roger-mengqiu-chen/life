@@ -125,11 +125,18 @@ class TransactionTypeAdmin(admin.ModelAdmin):
     ordering = ('name',)
 
 
+class TransactionInline(admin.TabularInline):
+    model = Transaction
+    extra = 1  # Number of empty rows to show for adding new transactions
+    fields = ('transaction_time', 'merchant', 'transaction_type', 'amount')
+
+
 @admin.register(TransactionCategory)
 class TransactionCategoryAdmin(admin.ModelAdmin):
     form = CategoryForm
     list_display = ('name',)
     search_fields = ('name',)
+    inlines = [TransactionInline]
 
 
 class TransactionSource(resources.ModelResource):
