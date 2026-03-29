@@ -102,11 +102,18 @@ class LocationAdmin(admin.ModelAdmin):
     ordering = ('street_no', 'street_name', 'city', 'state', 'zip_code')
 
 
+class TransactionInline(admin.TabularInline):
+    model = Transaction
+    extra = 1  # Number of empty rows to show for adding new transactions
+    fields = ('transaction_time', 'merchant', 'transaction_type', 'amount')
+
+
 @admin.register(Merchant)
 class MerchantAdmin(admin.ModelAdmin):
     list_display = ('name',)
     search_fields = ('name', 'website', 'phone', 'email', 'location__name')
     ordering = ('name',)
+    inlines = [TransactionInline]
 
 
 class CategoryForm(ModelForm):
@@ -125,10 +132,7 @@ class TransactionTypeAdmin(admin.ModelAdmin):
     ordering = ('name',)
 
 
-class TransactionInline(admin.TabularInline):
-    model = Transaction
-    extra = 1  # Number of empty rows to show for adding new transactions
-    fields = ('transaction_time', 'merchant', 'transaction_type', 'amount')
+
 
 
 @admin.register(TransactionCategory)
