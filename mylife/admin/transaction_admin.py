@@ -128,7 +128,7 @@ class TransactionTypeAdmin(admin.ModelAdmin):
 @admin.register(TransactionCategory)
 class TransactionCategoryAdmin(admin.ModelAdmin):
     form = CategoryForm
-    list_display = ('name', 'show_color')
+    list_display = ('name',)
     search_fields = ('name',)
 
 
