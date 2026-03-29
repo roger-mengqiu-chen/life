@@ -106,7 +106,7 @@ class TransactionInline(admin.TabularInline):
     model = Transaction
     extra = 1  # Number of empty rows to show for adding new transactions
     fields = ('transaction_time', 'merchant', 'transaction_type', 'amount')
-
+    show_change_link = True
 
 @admin.register(Merchant)
 class MerchantAdmin(admin.ModelAdmin):
