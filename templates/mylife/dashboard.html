@@ -1,0 +1,28 @@
+{% load plotly_dash %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dash App</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        html, body {
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+        }
+        #dash-container {
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+    {% plotly_app name="SimpleExample" ratio=0.7 %}
+</body>
+</html>

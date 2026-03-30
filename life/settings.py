@@ -24,6 +24,7 @@ INSTALLED_APPS = [
     'rangefilter',
     'mylife',
     'investment_journal',
+    'django_plotly_dash'
 ]
 
 MIDDLEWARE = [
@@ -86,6 +87,7 @@ USE_I18N = True
 
 USE_TZ = True
 
+X_FRAME_OPTIONS = 'SAMEORIGIN'
 
 STATIC_URL = 'static/'
 
