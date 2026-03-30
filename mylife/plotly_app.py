@@ -1,4 +1,3 @@
-import dash
 from dash import dcc, html, dash_table, Input, Output
 from django_plotly_dash import DjangoDash
 from django.db.models import Sum

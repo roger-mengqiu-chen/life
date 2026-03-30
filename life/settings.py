@@ -1,5 +1,5 @@
-from pathlib import Path
 import os
+from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -104,7 +104,7 @@ MERCHANTS = {
     'TST-Kama', 'AMZN', 'COURSERA', 'GOOGLE', 'FIDO Mobile', 'DOLLARAMA',
 }
 
-TRANSACTION_TIME_FORMAT = ('%Y-%m-%d', )
+TRANSACTION_TIME_FORMAT = ('%Y-%m-%d',)
 
 LOGGING = {
     'version': 1,
