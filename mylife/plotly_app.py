@@ -3,6 +3,7 @@ from django_plotly_dash import DjangoDash
 from django.db.models import Sum
 from mylife.models import TransactionCategory
 
+
 def get_category_data():
     """Fetch and calculate category data with percentages"""
     try:

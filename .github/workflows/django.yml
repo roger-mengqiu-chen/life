@@ -22,15 +22,10 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
 
-    - name: Install UV
+    - name: Install pkg
       run: |
-        pip install --upgrade pip
-        pip install uv --no-deps
-
-    - name: Install Dependencies with UV
-      run: |
-        uv sync
+        pip install -r requirements.txt
 
     - name: Run Tests
       run: |
-        uv run python manage.py test
+        python manage.py test

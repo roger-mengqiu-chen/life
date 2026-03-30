@@ -31,7 +31,8 @@ class StockTransactionInline(admin.TabularInline):
 
 @admin.register(Stock)
 class StockAdmin(admin.ModelAdmin):
-    list_display = ('symbol', 'total_qty', 'sector', 'average_cost', 'current_price', 'total_market_value', 'earnings', 'earning_rate', 'realized_return',)
+    list_display = ('symbol', 'total_qty', 'sector', 'average_cost', 'current_price', 'total_market_value', 'earnings',
+                    'earning_rate', 'realized_return',)
     readonly_fields = ('total_qty', 'total_market_value', 'total_cost', 'earnings', 'earning_rate', 'realized_return',)
     list_filter = ('sector',)
     ordering = ('symbol',)
@@ -49,4 +50,3 @@ class StockTransactionAdmin(admin.ModelAdmin):
     list_display = ('stock', 'date', 'qty', 'price', 'cost', 'fear_level')
     autocomplete_fields = ('stock',)
     list_filter = ('stock',)
-
