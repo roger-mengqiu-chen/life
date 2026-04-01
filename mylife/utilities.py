@@ -8,18 +8,12 @@ import json
 
 
 def load_pie_chart(df):
-    total = df['value'].sum()
-
-    custom_legend_labels = [
-        f"{row['label']}: {row['value']:,.2f} ({(row['value'] / total):.1%})"
-        for _, row in df.iterrows()
-    ]
 
     pie = go.Pie(
-        labels=custom_legend_labels,
+        labels=df['label'],
         values=df['value'],
         hoverinfo='label+percent+value',
-        textinfo='percent+value',
+        textinfo='label+percent+value',
         textposition='inside',
     )
 
