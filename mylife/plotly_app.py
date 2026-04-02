@@ -1,6 +1,8 @@
+import plotly.graph_objs as go
 from dash import dcc, html, dash_table, Input, Output
-from django_plotly_dash import DjangoDash
 from django.db.models import Sum
+from django_plotly_dash import DjangoDash
+
 from mylife.models import TransactionCategory
 
 
@@ -32,6 +34,7 @@ app = DjangoDash('SimpleExample')
 
 app.layout = html.Div([
     html.Div([
+        dcc.Graph(id='category-pie'),
         dash_table.DataTable(
             id='category-table',
             columns=[
@@ -54,10 +57,23 @@ app.layout = html.Div([
 ], style={'display': 'flex', 'flexDirection': 'column', 'height': '100%', 'width': '100%', 'overflowY': 'auto'})
 
 
+# Update both table and pie chart from the same data
 @app.callback(
-    Output('category-table', 'data'),
+    [Output('category-table', 'data'), Output('category-pie', 'figure')],
     Input('store', 'data'),
     prevent_initial_call=False
 )
-def update_table(data):
-    return get_category_data()
+def update_table_and_pie(data):
+    category_data = get_category_data()
+    # Prepare pie chart
+    if category_data:
+        fig = go.Figure(data=[go.Pie(
+            labels=[item['Category'] for item in category_data],
+            values=[item['Total'] for item in category_data],
+            textinfo='label+percent',
+            hoverinfo='label+value+percent',
+        )])
+        fig.update_layout(margin=dict(t=0, b=0, l=0, r=0), height=350)
+    else:
+        fig = go.Figure()
+    return category_data, fig

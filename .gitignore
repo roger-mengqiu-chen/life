@@ -5,3 +5,4 @@ venv/
 logs/
 .vscode/
 uv.lock
+staticfiles/
