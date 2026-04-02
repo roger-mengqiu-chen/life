@@ -10,7 +10,7 @@ def get_category_data():
         categories_data = TransactionCategory.objects.filter(transaction__transaction_type__is_expense=True).annotate(
             total=Sum('transaction__amount')
         ).values('name', 'total').order_by('-total')
-        
+
         # Calculate total and build data with percentages
         total_sum = sum(item['total'] or 0 for item in categories_data)
         data = []
@@ -26,6 +26,7 @@ def get_category_data():
     except Exception as e:
         print(f"Error loading category data: {e}")
         return []
+
 
 app = DjangoDash('SimpleExample')
 
@@ -51,6 +52,7 @@ app.layout = html.Div([
     ], style={'flex': '1', 'minHeight': '0', 'display': 'flex', 'flexDirection': 'column', 'overflowY': 'auto'}),
     dcc.Store(id='store'),
 ], style={'display': 'flex', 'flexDirection': 'column', 'height': '100%', 'width': '100%', 'overflowY': 'auto'})
+
 
 @app.callback(
     Output('category-table', 'data'),
