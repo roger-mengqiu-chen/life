@@ -52,7 +52,7 @@ app.layout = html.Div([
                 ],
                 page_action='none',
             ),
-            dcc.Graph(id='category-pie', style={'flex': '1', 'minWidth': '350px', 'height': '350px'}),
+            dcc.Graph(id='category-pie', style={'flex': '1', 'minWidth': '500px', 'height': '100%'}),
         ], style={'display': 'flex', 'flexDirection': 'row', 'width': '100%', 'alignItems': 'flex-start', 'gap': '24px'}),
     ], style={'flex': '1', 'minHeight': '0', 'display': 'flex', 'flexDirection': 'column', 'overflowY': 'auto'}),
     dcc.Store(id='store'),
@@ -74,8 +74,9 @@ def update_table_and_pie(data):
             values=[item['Total'] for item in category_data],
             textinfo='label+percent',
             hoverinfo='label+value+percent',
+            textposition='inside',
         )])
-        fig.update_layout(margin=dict(t=0, b=0, l=0, r=0), height=350)
+        fig.update_layout(margin=dict(t=0, b=0, l=0, r=0), height=500)
     else:
         fig = go.Figure()
     return category_data, fig
