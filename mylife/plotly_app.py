@@ -37,25 +37,35 @@ app.layout = html.Div([
     html.Div([
         html.Button('Clear Selection', id='clear-selection-btn', n_clicks=0, style={'marginBottom': '12px'}),
         html.Div([
-            dash_table.DataTable(
-                id='category-table',
-                columns=[
-                    {'name': 'Category', 'id': 'Category'},
-                    {'name': 'Total', 'id': 'Total'},
-                    {'name': 'Percentage', 'id': 'Percentage'}
-                ],
-                style_table={'width': '100%'},
-                style_cell={'textAlign': 'left', 'padding': '10px'},
-                style_data_conditional=[
-                    {
-                        'if': {'row_index': 'odd'},
-                        'backgroundColor': 'rgb(248, 248, 248)'
-                    }
-                ],
-                page_action='none',
-                row_selectable='multi',
-                selected_rows=[],
-            ),
+            html.Div([
+                dash_table.DataTable(
+                    id='category-table',
+                    columns=[
+                        {'name': 'Category', 'id': 'Category'},
+                        {'name': 'Total', 'id': 'Total'},
+                        {'name': 'Percentage', 'id': 'Percentage'}
+                    ],
+                    style_table={'width': '100%'},
+                    style_cell={'textAlign': 'left', 'padding': '10px'},
+                    style_data_conditional=[
+                        {
+                            'if': {'row_index': 'odd'},
+                            'backgroundColor': 'rgb(248, 248, 248)'
+                        }
+                    ],
+                    page_action='none',
+                    row_selectable='multi',
+                    selected_rows=[],
+                ),
+            ], style={
+                'height': '500px',
+                'overflowY': 'auto',
+                'minWidth': '350px',
+                'flex': '0 0 350px',
+                'border': '1px solid #eee',
+                'backgroundColor': '#fff',
+                'paddingRight': '8px',
+            }),
             dcc.Graph(id='category-pie', style={'flex': '1', 'minWidth': '500px', 'height': '100%'}),
         ], style={'display': 'flex', 'flexDirection': 'row', 'width': '100%', 'alignItems': 'flex-start', 'gap': '24px'}),
     ], style={'flex': '1', 'minHeight': '0', 'display': 'flex', 'flexDirection': 'column', 'overflowY': 'auto'}),
