@@ -1,4 +1,5 @@
 import plotly.graph_objs as go
+import dash
 from dash import dcc, html, dash_table, Input, Output
 from django.db.models import Sum
 from django_plotly_dash import DjangoDash
@@ -34,6 +35,7 @@ app = DjangoDash('SimpleExample')
 
 app.layout = html.Div([
     html.Div([
+        html.Button('Clear Selection', id='clear-selection-btn', n_clicks=0, style={'marginBottom': '12px'}),
         html.Div([
             dash_table.DataTable(
                 id='category-table',
@@ -51,6 +53,8 @@ app.layout = html.Div([
                     }
                 ],
                 page_action='none',
+                row_selectable='multi',
+                selected_rows=[],
             ),
             dcc.Graph(id='category-pie', style={'flex': '1', 'minWidth': '500px', 'height': '100%'}),
         ], style={'display': 'flex', 'flexDirection': 'row', 'width': '100%', 'alignItems': 'flex-start', 'gap': '24px'}),
@@ -60,18 +64,26 @@ app.layout = html.Div([
 
 
 # Update both table and pie chart from the same data
+
+
+# Callback to update table and pie chart
 @app.callback(
     [Output('category-table', 'data'), Output('category-pie', 'figure')],
-    Input('store', 'data'),
+    [Input('store', 'data'), Input('category-table', 'selected_rows')],
     prevent_initial_call=False
 )
-def update_table_and_pie(data):
+def update_table_and_pie(data, selected_rows):
     category_data = get_category_data()
+    # If any rows are selected, filter to those rows
+    if selected_rows and len(selected_rows) > 0:
+        filtered_data = [category_data[i] for i in selected_rows]
+    else:
+        filtered_data = category_data
     # Prepare pie chart
-    if category_data:
+    if filtered_data:
         fig = go.Figure(data=[go.Pie(
-            labels=[item['Category'] for item in category_data],
-            values=[item['Total'] for item in category_data],
+            labels=[item['Category'] for item in filtered_data],
+            values=[item['Total'] for item in filtered_data],
             textinfo='label+percent',
             hoverinfo='label+value+percent',
             textposition='inside',
@@ -80,3 +92,15 @@ def update_table_and_pie(data):
     else:
         fig = go.Figure()
     return category_data, fig
+
+# Callback to clear selection
+@app.callback(
+    Output('category-table', 'selected_rows'),
+    Input('clear-selection-btn', 'n_clicks'),
+    prevent_initial_call=True
+)
+def clear_selection(n_clicks):
+    if n_clicks:
+        return []
+    return dash.no_update
+
