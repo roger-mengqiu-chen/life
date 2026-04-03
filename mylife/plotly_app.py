@@ -34,24 +34,26 @@ app = DjangoDash('SimpleExample')
 
 app.layout = html.Div([
     html.Div([
-        dcc.Graph(id='category-pie'),
-        dash_table.DataTable(
-            id='category-table',
-            columns=[
-                {'name': 'Category', 'id': 'Category'},
-                {'name': 'Total', 'id': 'Total'},
-                {'name': 'Percentage', 'id': 'Percentage'}
-            ],
-            style_table={'width': '100%'},
-            style_cell={'textAlign': 'left', 'padding': '10px'},
-            style_data_conditional=[
-                {
-                    'if': {'row_index': 'odd'},
-                    'backgroundColor': 'rgb(248, 248, 248)'
-                }
-            ],
-            page_action='none',
-        ),
+        html.Div([
+            dash_table.DataTable(
+                id='category-table',
+                columns=[
+                    {'name': 'Category', 'id': 'Category'},
+                    {'name': 'Total', 'id': 'Total'},
+                    {'name': 'Percentage', 'id': 'Percentage'}
+                ],
+                style_table={'width': '100%'},
+                style_cell={'textAlign': 'left', 'padding': '10px'},
+                style_data_conditional=[
+                    {
+                        'if': {'row_index': 'odd'},
+                        'backgroundColor': 'rgb(248, 248, 248)'
+                    }
+                ],
+                page_action='none',
+            ),
+            dcc.Graph(id='category-pie', style={'flex': '1', 'minWidth': '350px', 'height': '350px'}),
+        ], style={'display': 'flex', 'flexDirection': 'row', 'width': '100%', 'alignItems': 'flex-start', 'gap': '24px'}),
     ], style={'flex': '1', 'minHeight': '0', 'display': 'flex', 'flexDirection': 'column', 'overflowY': 'auto'}),
     dcc.Store(id='store'),
 ], style={'display': 'flex', 'flexDirection': 'column', 'height': '100%', 'width': '100%', 'overflowY': 'auto'})
