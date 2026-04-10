@@ -42,10 +42,10 @@ app.layout = html.Div([
                     id='category-table',
                     columns=[
                         {'name': 'Category', 'id': 'Category'},
-                        {'name': 'Total', 'id': 'Total'},
+                        {'name': 'Total', 'id': 'Total', 'type': 'numeric', 'format': {'specifier': ',.2f'}},
                         {'name': 'Percentage', 'id': 'Percentage'}
                     ],
-                    style_table={'width': '100%'},
+                    style_table={'width': '100%', 'minWidth': '100%'},
                     style_cell={'textAlign': 'left', 'padding': '10px', 'fontFamily': 'sans-serif'},
                     style_data_conditional=[
                         {
@@ -60,25 +60,28 @@ app.layout = html.Div([
             ], style={
                 'height': '500px',
                 'overflowY': 'auto',
-                'flex': '0 0 350px',
+                'flex': '1',
                 'border': '1px solid #eee',
                 'backgroundColor': '#fff',
                 'paddingRight': '8px',
             }),
-            dcc.Graph(id='category-pie', style={'flex': '1', 'height': '100%'}),
+            dcc.Graph(id='category-pie', style={'flex': '2', 'height': '100%'}),
         ], style={'display': 'flex', 'flexDirection': 'row', 'width': '100%', 'alignItems': 'flex-start', 'gap': '24px'}),
     ], style={'flex': '1', 'minHeight': '0', 'display': 'flex', 'flexDirection': 'column', 'overflowY': 'auto'}),
     dcc.Store(id='store'),
 ], style={'display': 'flex', 'flexDirection': 'column', 'height': '100%', 'width': '100%', 'overflowY': 'auto'})
 
 
-# Update both table and pie chart from the same data
-
-
 # Callback to update table and pie chart
 @app.callback(
-    [Output('category-table', 'data'), Output('category-pie', 'figure')],
-    [Input('store', 'data'), Input('category-table', 'selected_rows')],
+    [
+        Output('category-table', 'data'),
+        Output('category-pie', 'figure')
+    ],
+    [
+        Input('store', 'data'),
+        Input('category-table', 'selected_rows')
+    ],
     prevent_initial_call=False
 )
 def update_table_and_pie(data, selected_rows):
