@@ -46,7 +46,7 @@ app.layout = html.Div([
                         {'name': 'Percentage', 'id': 'Percentage'}
                     ],
                     style_table={'width': '100%'},
-                    style_cell={'textAlign': 'left', 'padding': '10px'},
+                    style_cell={'textAlign': 'left', 'padding': '10px', 'fontFamily': 'sans-serif'},
                     style_data_conditional=[
                         {
                             'if': {'row_index': 'odd'},
