@@ -7,5 +7,4 @@ class AppConfig(AppConfig):
 
     def ready(self):
         # Import plotly_app after Django is fully loaded
-        from . import plotly_app  # noqa
-
+        from .dashboard import dashboard  # noqa
