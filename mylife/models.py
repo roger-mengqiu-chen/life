@@ -140,6 +140,13 @@ class Account(models.Model):
         return self.name
 
 
+class InvestmentType(models.Model):
+    name = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.name
+
+
 class Investment(models.Model):
     account = models.ForeignKey(Account, on_delete=models.PROTECT)
     start_date = models.DateField(null=True, blank=False)
@@ -151,6 +158,7 @@ class Investment(models.Model):
     interest_rate = models.FloatField(default=0, blank=True)
     profit_rate = models.FloatField(default=0, blank=True)
     note = models.TextField(null=True, blank=True)
+    investment_type = models.ForeignKey(InvestmentType, on_delete=models.PROTECT, null=True, blank=True)
 
     def __str__(self):
         return f'{self.due_date} - {self.amount}'

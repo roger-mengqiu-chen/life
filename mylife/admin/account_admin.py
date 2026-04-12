@@ -8,7 +8,7 @@ from mylife.models import (
     AccountHistory,
     History,
     Bank,
-    Investment
+    Investment, InvestmentType
 )
 from mylife.services import get_histories, get_investment_by_account_due_date
 from mylife.utilities import load_line_chart, load_bar_chart
@@ -133,9 +133,15 @@ class HistoryAdmin(admin.ModelAdmin):
         return super(HistoryAdmin, self).changelist_view(request, extra_context)
 
 
+@admin.register(InvestmentType)
+class InvestmentTypeAdmin(admin.ModelAdmin):
+    list_display = ('name',)
+    ordering = ('name',)
+
+
 @admin.register(Investment)
 class InvestmentAdmin(admin.ModelAdmin):
-    list_display = ('account', 'start_date', 'due_date', 'amount', 'interest_rate')
+    list_display = ('account', 'start_date', 'due_date', 'investment_type', 'amount', 'interest_rate')
     search_fields = ('account__name', 'due_date')
     list_filter = ('account',)
     autocomplete_fields = ('account',)
