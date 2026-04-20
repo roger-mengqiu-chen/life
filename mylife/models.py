@@ -1,7 +1,8 @@
+from datetime import datetime, timedelta
+
 from django.db import models
 from django.utils import timezone
 from django.utils.html import format_html
-from datetime import datetime, timedelta
 
 
 class Gender(models.Model):
