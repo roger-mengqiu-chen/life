@@ -2,13 +2,13 @@ from datetime import datetime
 
 from django.conf import settings
 from django.contrib import admin
-from django.shortcuts import render
-from rangefilter.filters import DateRangeFilter
 from django.contrib.humanize.templatetags.humanize import intcomma
 from django.forms import ModelForm, TextInput
+from django.shortcuts import render
 from import_export import resources, fields
 from import_export.admin import ImportExportModelAdmin
 from import_export.widgets import ForeignKeyWidget
+from rangefilter.filters import DateRangeFilter
 
 from mylife.models import (
     TransactionType,
@@ -108,6 +108,7 @@ class TransactionInline(admin.TabularInline):
     fields = ('transaction_time', 'merchant', 'transaction_type', 'amount')
     show_change_link = True
 
+
 @admin.register(Merchant)
 class MerchantAdmin(admin.ModelAdmin):
     list_display = ('name',)
@@ -130,9 +131,6 @@ class TransactionTypeAdmin(admin.ModelAdmin):
     list_display = ('name',)
     search_fields = ('name',)
     ordering = ('name',)
-
-
-
 
 
 @admin.register(TransactionCategory)
@@ -164,7 +162,7 @@ class TransactionSource(resources.ModelResource):
     class Meta:
         model = Transaction
         fields = ('amount', 'transaction_time',
-                  'transaction_type', 'merchant', 'category', )
+                  'transaction_type', 'merchant', 'category',)
         import_id_fields = []
         skip_unchanged = True
         report_skipped = True
@@ -214,21 +212,23 @@ class TransactionAdmin(ImportExportModelAdmin, admin.ModelAdmin):
                      'merchant__name', 'category__name')
     autocomplete_fields = ('transaction_type', 'category', 'merchant')
     resource_class = TransactionSource
-    ordering = ('-transaction_time', )
+    ordering = ('-transaction_time',)
     list_filter = (('transaction_time', DateRangeFilter),
                    'transaction_type',
                    'category',
-                   'merchant', )
+                   'merchant',)
     change_list_template = 'admin/mylife/transaction/change_list.html'
     actions = [bulk_edit_category, bulk_edit_merchant]
 
     def displayed_amount(self, obj):
         return intcomma(obj.amount)
+
     displayed_amount.short_description = 'Amount'
     displayed_amount.admin_order_field = 'amount'
 
     def display_time(self, obj):
         return obj.transaction_time.strftime('%Y-%m-%d')
+
     display_time.short_description = 'Date'
     display_time.admin_order_field = 'transaction_time'
 
