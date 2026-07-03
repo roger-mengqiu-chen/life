@@ -50,6 +50,25 @@ class Merchant(models.Model):
 
     def __str__(self):
         return self.name
+    
+    
+class Person(models.Model):
+    first_name = models.CharField(max_length=100)
+    last_name = models.CharField(max_length=100,
+                                 null=True,
+                                 blank=True)
+    merchant = models.ForeignKey(Merchant,
+                                 on_delete=models.PROTECT,
+                                 null=True,
+                                 blank=True)
+    gender = models.ForeignKey(Gender,
+                               on_delete=models.PROTECT)
+
+    class Meta:
+        verbose_name_plural = "People"
+
+    def __str__(self):
+        return self.first_name + " " + (self.last_name or '')
 
 
 class TransactionType(models.Model):
@@ -159,6 +178,7 @@ class Investment(models.Model):
     interest_rate = models.FloatField(default=0, blank=True)
     profit_rate = models.FloatField(default=0, blank=True)
     note = models.TextField(null=True, blank=True)
+    holder = models.ForeignKey(Person, on_delete=models.PROTECT, null=True, blank=True)
     investment_type = models.ForeignKey(InvestmentType, on_delete=models.PROTECT, null=True, blank=True)
 
     def __str__(self):
@@ -220,23 +240,6 @@ class AccountHistory(models.Model):
         return self.account.name
 
 
-class Person(models.Model):
-    first_name = models.CharField(max_length=100)
-    last_name = models.CharField(max_length=100,
-                                 null=True,
-                                 blank=True)
-    merchant = models.ForeignKey(Merchant,
-                                 on_delete=models.PROTECT,
-                                 null=True,
-                                 blank=True)
-    gender = models.ForeignKey(Gender,
-                               on_delete=models.PROTECT)
-
-    class Meta:
-        verbose_name_plural = "People"
-
-    def __str__(self):
-        return self.first_name + " " + (self.last_name or '')
 
 
 class EventType(models.Model):
