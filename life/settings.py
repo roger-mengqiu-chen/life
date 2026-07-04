@@ -117,7 +117,7 @@ MERCHANTS = {
     'TST-Kama', 'AMZN', 'COURSERA', 'GOOGLE', 'FIDO Mobile', 'DOLLARAMA',
 }
 
-TRANSACTION_TIME_FORMAT = ('%Y-%m-%d',)
+TRANSACTION_TIME_FORMAT = ('%Y-%m-%d', '%B %d, %Y')
 
 LOGGING = {
     'version': 1,
