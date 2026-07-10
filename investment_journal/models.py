@@ -61,6 +61,15 @@ class News(models.Model):
         verbose_name_plural = "News"
 
 
+class StockTransactionType(models.Model):
+    name = models.CharField(max_length=50, unique=True)
+    is_buy = models.BooleanField(default=True)
+    is_sell = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.name
+
+
 class StockTransaction(models.Model):
     stock = models.ForeignKey(Stock, on_delete=models.CASCADE)
     qty = models.DecimalField(max_digits=20, decimal_places=2)
@@ -70,6 +79,8 @@ class StockTransaction(models.Model):
     fear_level = models.IntegerField()
     note = models.TextField(blank=True, null=True)
     news = models.ManyToManyField(News, blank=True)
+    transaction_type = models.ForeignKey(
+        StockTransactionType, on_delete=models.PROTECT, blank=True, null=True)    
 
     def __str__(self):
         return f'{self.stock}: {self.qty} {self.date}'
