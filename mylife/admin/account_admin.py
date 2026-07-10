@@ -141,7 +141,7 @@ class InvestmentTypeAdmin(admin.ModelAdmin):
 
 @admin.register(Investment)
 class InvestmentAdmin(admin.ModelAdmin):
-    list_display = ('account', 'start_date', 'due_date', 'investment_type', 'amount','currency', 'interest_rate')
+    list_display = ('account', 'start_date', 'due_date', 'investment_type', 'amount', 'interest_rate')
     search_fields = ('account__name', 'due_date', 'person__first_name', 'person__last_name')
     list_filter = ('account',)
     autocomplete_fields = ('account', 'holder')

@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from mylife.models import (Person, EventType,
+from mylife.models import (Currency, Person, EventType,
                            Event, Gender)
 
 admin.site.site_header = "Life"
@@ -16,6 +16,13 @@ class GenderAdmin(admin.ModelAdmin):
 
     def has_module_permission(self, request):
         return False
+    
+
+@admin.register(Currency)
+class CurrencyAdmin(admin.ModelAdmin):
+    list_display = ('code',)
+    search_fields = ('code',)
+    ordering = ('code',)
 
 
 @admin.register(Person)
