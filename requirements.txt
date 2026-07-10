@@ -8,3 +8,4 @@ pandas~=3.0.1
 pandas-stubs~=3.0.0.260204
 plotly~=6.6.0
 django-plotly-dash~=2.5.0
+python-dotenv~=1.2.2

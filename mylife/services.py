@@ -1,6 +1,9 @@
 import pandas
 
-from .models import Transaction, History, Investment
+from django.conf import settings
+
+from .models import Transaction, History, Investment, Currency, CurrencyHistory
+import requests
 
 
 def get_trans_df(request):
@@ -89,3 +92,22 @@ def get_utility_df_for_queryset(queryset):
     cost_df.rename(columns={'amount': 'value'}, inplace=True)
 
     return usage_df, cost_df
+
+
+def get_and_save_currency_exchange_rate():
+    url = f'https://v6.exchangerate-api.com/v6/{settings.EXCHANGE_RATE_API_KEY}/latest/USD'
+    response = requests.get(url)
+    if response.status_code == 200:
+        data = response.json()
+        if data['result'] == 'success':
+            rates = data['conversion_rates']
+            date = data['time_last_update_unix']
+            currencies = Currency.objects.all()
+            for currency in currencies:
+                if currency.code in rates:
+                    currency.exchange_rate = rates[currency.code]
+                    CurrencyHistory.objects.update_or_create(
+                        currency=currency,
+                        date=pandas.Timestamp(date, unit='s').date(),
+                        defaults={'exchange_rate': rates[currency.code]}
+                    )

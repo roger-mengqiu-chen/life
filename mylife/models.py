@@ -54,6 +54,21 @@ class Merchant(models.Model):
 
 class Currency(models.Model):
     code = models.CharField(max_length=10, unique=True)
+
+    def __str__(self):
+        return self.code
+
+
+class CurrencyHistory(models.Model):
+    currency = models.ForeignKey(Currency, on_delete=models.CASCADE)
+    date = models.DateField()
+    exchange_rate = models.FloatField()
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['currency', 'date'],
+                                    name='unique_currency_date'),
+        ]
     
     
 class Person(models.Model):

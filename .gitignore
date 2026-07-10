@@ -6,3 +6,4 @@ logs/
 .vscode/
 uv.lock
 staticfiles/
+.env

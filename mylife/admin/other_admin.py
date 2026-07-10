@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 from mylife.models import (Currency, Person, EventType,
-                           Event, Gender)
+                           Event, Gender, CurrencyHistory)
 
 admin.site.site_header = "Life"
 admin.site.site_title = "Life"
@@ -23,6 +23,13 @@ class CurrencyAdmin(admin.ModelAdmin):
     list_display = ('code',)
     search_fields = ('code',)
     ordering = ('code',)
+
+
+@admin.register(CurrencyHistory)
+class CurrencyHistoryAdmin(admin.ModelAdmin):
+    list_display = ('currency', 'date', 'exchange_rate')
+    search_fields = ('currency__code', 'date')
+    ordering = ('-date',)
 
 
 @admin.register(Person)
