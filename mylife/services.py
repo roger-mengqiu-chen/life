@@ -1,3 +1,4 @@
+from django.db import connection
 import pandas
 
 from django.conf import settings
@@ -66,12 +67,41 @@ def get_histories():
 
 
 def get_investment_by_account_due_date():
-    values = Investment.objects.all().values('account__name', 'due_date', 'amount')
-    df = pandas.DataFrame(values)
+    query = '''
+        SELECT ma.name AS account__name, due_date, amount, exchange_rate
+        FROM mylife_investment mi 
+        LEFT JOIN mylife_currency mc ON mi.currency_id = mc.id 
+        LEFT JOIN mylife_account ma ON mi.account_id = ma.id
+        LEFT JOIN (
+            WITH RankedRates AS (
+                SELECT 
+                    currency_id,
+                    exchange_rate,
+                    date,
+                    ROW_NUMBER() OVER (
+                        PARTITION BY currency_id 
+                        ORDER BY date DESC
+                    ) AS RowNum
+                FROM 
+                    mylife_currencyhistory mc2
+            )
+            SELECT 
+                currency_id,
+                exchange_rate,
+                date
+            FROM 
+                RankedRates
+            WHERE 
+                RowNum = 1
+        ) t1 ON mc.id = t1.currency_id
+    '''
+    values = connection.cursor().execute(query).fetchall()
+    df = pandas.DataFrame(values, columns=['account__name', 'due_date', 'amount', 'exchange_rate'])
     df = df[df['due_date'].isna() == False]
     df['date'] = df.apply(
         lambda x: x['due_date'].strftime('%Y-%m-01'), axis=1
     )
+    df['amount'] = df['amount'] / df['exchange_rate']
     df.drop(columns=['due_date'], inplace=True)
     df.rename(columns={'account__name': 'account',
                        'amount': 'value'},

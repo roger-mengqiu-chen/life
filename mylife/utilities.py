@@ -77,7 +77,7 @@ def load_bar_chart(df):
 
     fig.update_layout(
         yaxis=dict(
-            tickformat=',',
+            tickformat=',.2f',
         ),
         xaxis=dict(
             tickformat='%b %Y',

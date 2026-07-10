@@ -19,6 +19,7 @@ class Stock(models.Model):
     earnings = models.DecimalField(default=0, max_digits=20, decimal_places=2)
     earning_rate = models.DecimalField(default=0, max_digits=20, decimal_places=2)
     realized_return = models.DecimalField(default=0, max_digits=20, decimal_places=2)
+    currency = models.ForeignKey('mylife.Currency', on_delete=models.PROTECT, blank=True, null=True)
 
     class Media:
         js = ('js/investment_journal.js',)
