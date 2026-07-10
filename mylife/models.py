@@ -55,6 +55,10 @@ class Merchant(models.Model):
 class Currency(models.Model):
     code = models.CharField(max_length=10, unique=True)
 
+    class Meta:
+        verbose_name_plural = "Currencies"
+        ordering = ['code']
+
     def __str__(self):
         return self.code
 
@@ -69,6 +73,7 @@ class CurrencyHistory(models.Model):
             models.UniqueConstraint(fields=['currency', 'date'],
                                     name='unique_currency_date'),
         ]
+        verbose_name_plural = "Currency Histories"
     
     
 class Person(models.Model):
