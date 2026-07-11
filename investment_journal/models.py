@@ -12,13 +12,11 @@ class Stock(models.Model):
     symbol = models.CharField(max_length=50, unique=True)
     sector = models.ForeignKey(Sector, on_delete=models.CASCADE)
     current_price = models.DecimalField(max_digits=10, decimal_places=2)
-    average_cost = models.DecimalField(default=0, max_digits=10, decimal_places=2)
     total_qty = models.DecimalField(default=0, max_digits=20, blank=True, decimal_places=2)
     total_market_value = models.DecimalField(default=0, max_digits=20, blank=True, decimal_places=2)
-    total_cost = models.DecimalField(default=0, max_digits=20, decimal_places=2)
-    earnings = models.DecimalField(default=0, max_digits=20, decimal_places=2)
-    earning_rate = models.DecimalField(default=0, max_digits=20, decimal_places=2)
-    realized_return = models.DecimalField(default=0, max_digits=20, decimal_places=2)
+    earned = models.DecimalField(default=0, max_digits=20, decimal_places=2)
+    profit_rate = models.DecimalField(default=0, max_digits=20, decimal_places=2)
+    sold = models.DecimalField(default=0, max_digits=20, decimal_places=2)
     currency = models.ForeignKey('mylife.Currency', on_delete=models.PROTECT, blank=True, null=True)
 
     class Media:
@@ -26,25 +24,16 @@ class Stock(models.Model):
 
     def __str__(self):
         return self.symbol
-
+    
     def save(self, *args, **kwargs):
-        if self.pk:
-            transactions = self.stocktransaction_set.all()
-            sold_transactions = transactions.filter(cost__lt=0)
+        transactions = self.stocktransaction_set.all()
+        sell_transactions = transactions.filter(transaction_type__is_sell=True)
+        buy_transactions = transactions.filter(transaction_type__is_buy=True)
+        self.total_qty = (
+            buy_transactions.aggregate(total=models.Sum('qty'))['total'] or 0 
+            - sell_transactions.aggregate(total=models.Sum('qty'))['total'] or 0
+        )
 
-            if sold_transactions.exists():
-                self.realized_return = -transactions.filter(cost__lt=0).aggregate(models.Sum('cost'))['cost__sum']
-                sold_qty = sold_transactions.aggregate(models.Sum('qty'))['qty__sum']
-            else:
-                self.realized_return = 0
-                sold_qty = 0
-
-            self.total_qty = transactions.filter(cost__gt=0).aggregate(models.Sum('qty'))['qty__sum'] + sold_qty
-            self.total_market_value = self.current_price * self.total_qty
-            self.total_cost = self.average_cost * self.total_qty
-
-            self.earnings = (self.current_price - self.average_cost) * self.total_qty
-            self.earning_rate = (self.current_price - self.average_cost) / self.average_cost * 100
         super().save(*args, **kwargs)
 
 
@@ -89,5 +78,5 @@ class StockTransaction(models.Model):
         return f'{self.stock}: {self.qty} {self.date}'
 
     def save(self, *args, **kwargs):
-        self.cost = self.qty * self.price
+        self.cost = self.qty * self.price + self.commission
         super().save(*args, **kwargs)

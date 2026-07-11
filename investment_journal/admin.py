@@ -3,8 +3,8 @@ from datetime import datetime
 from django.contrib import admin
 from django.conf import settings
 from import_export import fields, resources
+from import_export import widgets
 from import_export.admin import ImportExportModelAdmin
-from import_export.widgets import DateWidget, ForeignKeyWidget
 
 from investment_journal.models import (
     Stock,
@@ -39,9 +39,9 @@ class StockTransactionInline(admin.TabularInline):
 
 @admin.register(Stock)
 class StockAdmin(admin.ModelAdmin):
-    list_display = ('symbol', 'total_qty', 'sector', 'average_cost', 'current_price', 'total_market_value', 'earnings',
-                    'earning_rate', 'realized_return',)
-    readonly_fields = ('total_qty', 'total_market_value', 'total_cost', 'earnings', 'earning_rate', 'realized_return',)
+    list_display = ('symbol', 'total_qty', 'sector', 'currency', 'current_price', 'total_market_value', 
+                    'earned', 'profit_rate', 'sold',)
+    readonly_fields = ('total_qty', 'total_market_value', 'earned', 'profit_rate', 'sold',)
     list_filter = ('sector',)
     ordering = ('symbol',)
     search_fields = ('symbol',)
@@ -53,7 +53,7 @@ class StockAdmin(admin.ModelAdmin):
         )
 
 
-class MultiFormatDateWidget(DateWidget):
+class MultiFormatDateWidget(widgets.DateWidget):
     def clean(self, value, row=None, **kwargs):
         if not value:
             return None
@@ -70,37 +70,82 @@ class MultiFormatDateWidget(DateWidget):
 
 
 class StockTransactionSource(resources.ModelResource):
-    transaction_time = fields.Field(
-        column_name='transaction_time',
-        attribute='transaction_time',
+    date = fields.Field(
+        column_name='Transaction Date',
+        attribute='date',
         widget=MultiFormatDateWidget()
     )
     
-    currency = fields.Field(
-        column_name='currency',
-        attribute='currency',
-        widget=ForeignKeyWidget(Currency, 'code')
+    qty = fields.Field(
+        column_name='Quantity',
+        attribute='qty',
+        widget=widgets.DecimalWidget()
+    )
+    
+    price = fields.Field(
+        column_name='Price',
+        attribute='price',
+        widget=widgets.DecimalWidget()
+    )
+    
+    commission = fields.Field(
+        column_name='Commission',
+        attribute='commission',
+        widget=widgets.DecimalWidget()
+    )
+    
+    exchange_rate = fields.Field(
+        column_name='Exchange Rate',
+        attribute='exchange_rate',
+        widget=widgets.DecimalWidget()
     )
 
+    stock = fields.Field(
+        column_name='Symbol',
+        attribute='stock',
+        widget=widgets.ForeignKeyWidget(Stock, 'symbol')
+    )
+    
+    transaction_type = fields.Field(
+        column_name='Transaction Type',
+        attribute='transaction_type',
+        widget=widgets.ForeignKeyWidget(StockTransactionType, 'name')
+    )
+    
+    currency = fields.Field(
+        column_name='Currency of Amount',
+        attribute='currency',
+        widget=widgets.ForeignKeyWidget(Currency, 'code')
+    )
 
     class Meta:
         model = StockTransaction
-        fields = ('amount', 'transaction_time',
-                  'transaction_type', 'merchant', 'category',)
-        import_id_fields = []
+        # Include all the fields you want imported
+        fields = ('date', 'stock', 'qty', 'price', 'commission', 'exchange_rate', 'currency', 'transaction_type')
+        import_id_fields = []  # Empty if you don't have an ID column and rely on default behavior
         skip_unchanged = True
         report_skipped = True
 
-    def parse_merchant_name(self, name):
-        for merchant in settings.MERCHANTS:
-            if merchant.lower() in name.lower():
-                return merchant.title()
-        return name
-
     def before_import_row(self, row, **kwargs):
-        transaction_type_name = row.get('transaction_type', None)
-        merchant_name = row.get('merchant', None)
-        category_name = row.get('category', None)
+        stock_identifier = row.get('Symbol')
+        if not stock_identifier:
+            raise ValueError("Stock identifier (Symbol) is missing in the import row.")
+        
+        stock_exists = Stock.objects.filter(symbol=stock_identifier).exists()
+        if not stock_exists:
+            raise ValueError(f'Stock with symbol "{stock_identifier}" does not exist. '
+                             f' Please add it before importing transactions.')
+        tx_type_name = row.get('Transaction Type')
+        if tx_type_name:
+            StockTransactionType.objects.get_or_create(
+                name=tx_type_name,
+                defaults={'is_buy': tx_type_name.lower() == 'buy', 'is_sell': tx_type_name.lower() == 'sell'}
+            )
+
+        exchange_rate_value = row.get('Exchange Rate')
+        if exchange_rate_value is None or exchange_rate_value == '':
+            exchange_rate_value = 1.0
+            row['Exchange Rate'] = exchange_rate_value
 
 
 @admin.register(StockTransactionType)
