@@ -1,0 +1,28 @@
+{% extends "admin/change_list.html" %}
+
+{% block extrahead %}
+{{ block.super }}
+
+{% endblock %}
+{% block content %}
+{{ block.super }}
+
+<script>
+const lossColor = "rgba(252,3,3,0.43)"
+const earningColor = "rgba(167,245,115,0.82)"
+
+const rateCells = document.querySelectorAll(".field-earned");
+rateCells.forEach(rateCell => {
+    const value = parseFloat(rateCell.innerText);
+    const row = rateCell.parentElement;
+    if (value > 0) {
+        row.style.background = earningColor;
+    }
+    else if (value < 0) {
+        row.style.background = lossColor;
+    }
+})
+
+</script>
+{% endblock%}
+

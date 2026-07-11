@@ -47,11 +47,7 @@ class StockAdmin(admin.ModelAdmin):
     ordering = ('symbol',)
     search_fields = ('symbol',)
     inlines = (StockTransactionInline,)
-
-    class Media:
-        js = (
-            'js/investment_journal.js',
-        )
+    change_list_template = 'admin/investment_journal/stock/change_list.html'
 
 
 class MultiFormatDateWidget(widgets.DateWidget):
