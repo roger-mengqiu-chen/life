@@ -32,7 +32,8 @@ class NewsAdmin(admin.ModelAdmin):
 
 class StockTransactionInline(admin.TabularInline):
     model = StockTransaction
-    fields = readonly_fields = ('date', 'qty', 'price', 'cost', 'fear_level', 'note',)
+    fields = readonly_fields = ('date', 'qty', 'price', 'transaction_type', 'cost', 'fear_level',)
+    ordering = ('-date',)
     extra = 0
     can_delete = False
 
@@ -40,8 +41,8 @@ class StockTransactionInline(admin.TabularInline):
 @admin.register(Stock)
 class StockAdmin(admin.ModelAdmin):
     list_display = ('symbol', 'total_qty', 'sector', 'currency', 'current_price', 'total_market_value', 
-                    'earned', 'profit_rate', 'sold',)
-    readonly_fields = ('total_qty', 'total_market_value', 'earned', 'profit_rate', 'sold',)
+                    'total_bought', 'average_cost', 'earned', 'total_sold',)
+    readonly_fields = ('total_qty', 'total_market_value', 'total_bought', 'average_cost', 'earned', 'total_sold',)
     list_filter = ('sector',)
     ordering = ('symbol',)
     search_fields = ('symbol',)
