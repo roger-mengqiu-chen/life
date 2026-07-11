@@ -77,6 +77,8 @@ class StockTransaction(models.Model):
     price = models.DecimalField(max_digits=20, decimal_places=2)
     commission = models.DecimalField(default=0, max_digits=20, decimal_places=2)
     cost = models.DecimalField(default=0, max_digits=20, decimal_places=2)
+    exchange_rate = models.DecimalField(default=1, max_digits=20, decimal_places=6)
+    currency = models.ForeignKey('mylife.Currency', on_delete=models.PROTECT, blank=True, null=True)
     fear_level = models.IntegerField(default=0, blank=True, null=True)
     note = models.TextField(blank=True, null=True)
     news = models.ManyToManyField(News, blank=True)
