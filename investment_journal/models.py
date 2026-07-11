@@ -75,8 +75,9 @@ class StockTransaction(models.Model):
     qty = models.DecimalField(max_digits=20, decimal_places=2)
     date = models.DateField()
     price = models.DecimalField(max_digits=20, decimal_places=2)
+    commission = models.DecimalField(default=0, max_digits=20, decimal_places=2)
     cost = models.DecimalField(default=0, max_digits=20, decimal_places=2)
-    fear_level = models.IntegerField()
+    fear_level = models.IntegerField(default=0, blank=True, null=True)
     note = models.TextField(blank=True, null=True)
     news = models.ManyToManyField(News, blank=True)
     transaction_type = models.ForeignKey(

@@ -3,13 +3,15 @@ from datetime import datetime
 from django.contrib import admin
 from django.conf import settings
 from import_export import fields, resources
+from import_export.admin import ImportExportModelAdmin
 from import_export.widgets import DateWidget, ForeignKeyWidget
 
 from investment_journal.models import (
     Stock,
     StockTransaction,
     Sector,
-    News
+    News,
+    StockTransactionType
 )
 from mylife.models import Currency
 
@@ -101,9 +103,16 @@ class StockTransactionSource(resources.ModelResource):
         category_name = row.get('category', None)
 
 
+@admin.register(StockTransactionType)
+class StockTransactionTypeAdmin(admin.ModelAdmin):
+    list_display = ('name', 'is_buy', 'is_sell')
+    search_fields = ('name',)
+    ordering = ('name',)
+
 
 @admin.register(StockTransaction)
-class StockTransactionAdmin(admin.ModelAdmin):
+class StockTransactionAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     list_display = ('stock', 'date', 'qty', 'price', 'cost', 'transaction_type', 'fear_level')
     autocomplete_fields = ('stock',)
     list_filter = ('stock',)
+    resource_class = StockTransactionSource
