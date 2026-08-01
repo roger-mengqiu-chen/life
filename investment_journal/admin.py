@@ -144,6 +144,12 @@ class StockTransactionSource(resources.ModelResource):
             exchange_rate_value = 1.0
             row['Exchange Rate'] = exchange_rate_value
 
+    def after_import_row(self, row, row_result, **kwargs):
+        stock_identifier = row.get('Symbol')
+        if stock_identifier:
+            stock = Stock.objects.get(symbol=stock_identifier)
+            stock.save()  # This will trigger the recalculation of totals and averages
+
 
 @admin.register(StockTransactionType)
 class StockTransactionTypeAdmin(admin.ModelAdmin):

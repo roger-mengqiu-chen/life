@@ -29,6 +29,11 @@ class Stock(models.Model):
         return self.symbol
     
     def save(self, *args, **kwargs):
+        if self.id is None:
+            # If the stock is new, we don't have any transactions yet, so we can skip calculations
+            super().save(*args, **kwargs)
+            return
+        
         # 1. Fetch all transactions ordered chronologically by date
         transactions = self.stocktransaction_set.all().order_by('date', 'id')
 
@@ -138,3 +143,4 @@ class StockTransaction(models.Model):
     def save(self, *args, **kwargs):
         self.cost = self.qty * self.price + self.commission
         super().save(*args, **kwargs)
+        self.stock.save() 

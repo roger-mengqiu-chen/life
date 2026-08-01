@@ -265,8 +265,6 @@ class AccountHistory(models.Model):
         return self.account.name
 
 
-
-
 class EventType(models.Model):
     name = models.CharField(max_length=255)
 
