@@ -14,7 +14,10 @@ EXCHANGE_RATE_API_KEY = os.getenv('EXCHANGE_RATE_API_KEY', '')
 
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+
+STATIC_URL = '/static/'
+STATIC_ROOT = f'{BASE_DIR}/staticfiles/'
 
 INSTALLED_APPS = [
     'django.contrib.admin',
