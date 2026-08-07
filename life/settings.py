@@ -29,7 +29,7 @@ INSTALLED_APPS = [
     'import_export',
     'rest_framework',
     'rangefilter',
-    'mylife',
+    'mylife.apps.MyLifeConfig',
     'investment_journal',
     'django_plotly_dash'
 ]
