@@ -1,6 +1,7 @@
 from django.contrib import admin, messages
 from django.http import HttpResponseRedirect
 from django.urls import path
+from django.utils import timezone
 
 from mylife.models import (Currency, Person, EventType,
                            Event, Gender, CurrencyHistory)
@@ -80,4 +81,4 @@ class EventAdmin(admin.ModelAdmin):
 
     @admin.display(description='Event time', ordering='event_time')
     def event_time_date(self, obj):
-        return obj.event_time.strftime('%Y-%m-%d')
+        return timezone.localtime(obj.event_time).strftime('%Y-%m-%d')
