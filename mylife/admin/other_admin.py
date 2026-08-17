@@ -72,8 +72,12 @@ class EventTypeAdmin(admin.ModelAdmin):
 
 @admin.register(Event)
 class EventAdmin(admin.ModelAdmin):
-    list_display = ('event_time', 'event_type', 'name', 'location', 'passed_time')
+    list_display = ('event_time_date', 'event_type', 'name', 'location', 'passed_time')
     search_fields = ('event_time', 'event_type__name', 'name', 'location__city',
                      'location__state', 'location__country')
     autocomplete_fields = ('event_type', 'location', 'people')
     ordering = ('-event_time', )
+
+    @admin.display(description='Event time', ordering='event_time')
+    def event_time_date(self, obj):
+        return obj.event_time.strftime('%Y-%m-%d')
