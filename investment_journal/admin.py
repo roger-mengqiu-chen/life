@@ -1,6 +1,3 @@
-from datetime import datetime
-
-from django.conf import settings
 from django.contrib import admin
 from import_export import fields, resources
 from import_export import widgets
@@ -13,6 +10,7 @@ from investment_journal.models import (
     News,
     StockTransactionType
 )
+from mylife.admin.widgets import MultiFormatDateWidget
 from mylife.models import Currency
 
 
@@ -56,22 +54,6 @@ class StockAdmin(admin.ModelAdmin):
     search_fields = ('symbol',)
     inlines = (StockTransactionInline,)
     change_list_template = 'admin/investment_journal/stock/change_list.html'
-
-
-class MultiFormatDateWidget(widgets.DateWidget):
-    def clean(self, value, row=None, **kwargs):
-        if not value:
-            return None
-
-        formats = settings.TRANSACTION_TIME_FORMAT
-
-        for fmt in formats:
-            try:
-                return datetime.strptime(value.strip(), fmt).date()
-            except (ValueError, TypeError):
-                continue
-
-        return super().clean(value, row, **kwargs)
 
 
 class StockTransactionSource(resources.ModelResource):
