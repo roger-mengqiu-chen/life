@@ -9,12 +9,12 @@ load_dotenv(os.path.join(BASE_DIR, '.env'))
 LOG_DIR = os.path.join(BASE_DIR, 'logs')
 os.makedirs(LOG_DIR, exist_ok=True)
 
-SECRET_KEY = 'django-insecure-xw&5k*a5_$@ue-e*@n%(4-313r*7-u)ur#p!3x80hnmx01jngt'
+SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-xw&5k*a5_$@ue-e*@n%(4-313r*7-u)ur#p!3x80hnmx01jngt')
 
 EXCHANGE_RATE_API_KEY = os.getenv('EXCHANGE_RATE_API_KEY', '')
 GEMINI_API_KEY = os.getenv('GEMINI_API_KEY', '')
 
-DEBUG = True
+DEBUG = os.getenv('DEBUG', 'True') == 'True'
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
