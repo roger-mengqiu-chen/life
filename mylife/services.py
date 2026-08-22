@@ -86,7 +86,7 @@ def get_investment_by_account_due_date():
             '''
     values = connection.cursor().execute(query).fetchall()
     df = pandas.DataFrame(values, columns=['account__name', 'due_date', 'amount', 'exchange_rate'])
-    df = df[df['due_date'].isna() == False]
+    df = df[df['due_date'].notna()]
     df['date'] = df.apply(
         lambda x: x['due_date'].strftime('%Y-%m-01'), axis=1
     )
