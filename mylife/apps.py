@@ -1,5 +1,5 @@
 from pathlib import Path
-
+from django.conf import settings
 from django.apps import AppConfig
 
 from django.db.backends.signals import connection_created
@@ -22,3 +22,16 @@ def load_sqlite_extension(connection, **kwargs):
 class MyLifeConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
     name = 'mylife'
+
+    def ready(self):
+        # Fix compatibility between django-plotly-dash's PseudoFlask and Dash >= 2.16
+        try:
+            from django_plotly_dash.dash_wrapper import PseudoFlask
+            PseudoFlask.secret_key = None
+        except ImportError:
+            pass
+
+        try:
+            import mylife.dashboard.dashboard  # noqa: F401
+        except ImportError:
+            pass
