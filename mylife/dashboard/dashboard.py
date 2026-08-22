@@ -1,5 +1,5 @@
-import plotly.graph_objs as go
 import dash
+import plotly.graph_objs as go
 from dash import dcc, html, dash_table, Input, Output
 from django.db.models import Sum
 from django_plotly_dash import DjangoDash
@@ -66,7 +66,8 @@ app.layout = html.Div([
                 'paddingRight': '8px',
             }),
             dcc.Graph(id='category-pie', style={'flex': '2', 'height': '100%'}),
-        ], style={'display': 'flex', 'flexDirection': 'row', 'width': '100%', 'alignItems': 'flex-start', 'gap': '24px'}),
+        ], style={'display': 'flex', 'flexDirection': 'row', 'width': '100%', 'alignItems': 'flex-start',
+                  'gap': '24px'}),
     ], style={'flex': '1', 'minHeight': '0', 'display': 'flex', 'flexDirection': 'column', 'overflowY': 'auto'}),
     dcc.Store(id='store'),
 ], style={'display': 'flex', 'flexDirection': 'column', 'height': '100%', 'width': '100%', 'overflowY': 'auto'})
@@ -105,6 +106,7 @@ def update_table_and_pie(data, selected_rows):
         fig = go.Figure()
     return category_data, fig
 
+
 # Callback to clear selection
 @app.callback(
     Output('category-table', 'selected_rows'),
@@ -115,4 +117,3 @@ def clear_selection(n_clicks):
     if n_clicks:
         return []
     return dash.no_update
-

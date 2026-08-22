@@ -1,7 +1,7 @@
 from datetime import datetime
 
-from django.contrib import admin
 from django.conf import settings
+from django.contrib import admin
 from import_export import fields, resources
 from import_export import widgets
 from import_export.admin import ImportExportModelAdmin
@@ -32,7 +32,9 @@ class NewsAdmin(admin.ModelAdmin):
 
 class StockTransactionInline(admin.TabularInline):
     model = StockTransaction
-    fields = readonly_fields = ('date', 'qty', 'price', 'transaction_type', 'cost', 'fear_level',)
+    fields = readonly_fields = (
+        'date', 'qty', 'price', 'transaction_type', 'cost', 'fear_level',
+    )
     ordering = ('-date',)
     extra = 0
     can_delete = False
@@ -40,9 +42,15 @@ class StockTransactionInline(admin.TabularInline):
 
 @admin.register(Stock)
 class StockAdmin(admin.ModelAdmin):
-    list_display = ('symbol', 'total_qty', 'sector', 'currency', 'current_price', 'total_market_value', 
-                    'total_bought', 'average_cost', 'earned', 'total_sold',)
-    readonly_fields = ('total_qty', 'total_market_value', 'total_bought', 'average_cost', 'earned', 'total_sold',)
+    list_display = (
+        'symbol', 'total_qty', 'sector', 'currency',
+        'current_price', 'total_market_value', 'total_bought', 'average_cost',
+        'earned', 'total_sold',
+    )
+    readonly_fields = (
+        'total_qty', 'total_market_value', 'total_bought', 'average_cost',
+        'earned', 'total_sold',
+    )
     list_filter = ('sector',)
     ordering = ('symbol',)
     search_fields = ('symbol',)
@@ -62,7 +70,7 @@ class MultiFormatDateWidget(widgets.DateWidget):
                 return datetime.strptime(value.strip(), fmt).date()
             except (ValueError, TypeError):
                 continue
-                
+
         return super().clean(value, row, **kwargs)
 
 
@@ -72,25 +80,25 @@ class StockTransactionSource(resources.ModelResource):
         attribute='date',
         widget=MultiFormatDateWidget()
     )
-    
+
     qty = fields.Field(
         column_name='Quantity',
         attribute='qty',
         widget=widgets.DecimalWidget()
     )
-    
+
     price = fields.Field(
         column_name='Price',
         attribute='price',
         widget=widgets.DecimalWidget()
     )
-    
+
     commission = fields.Field(
         column_name='Commission',
         attribute='commission',
         widget=widgets.DecimalWidget()
     )
-    
+
     exchange_rate = fields.Field(
         column_name='Exchange Rate',
         attribute='exchange_rate',
@@ -102,13 +110,13 @@ class StockTransactionSource(resources.ModelResource):
         attribute='stock',
         widget=widgets.ForeignKeyWidget(Stock, 'symbol')
     )
-    
+
     transaction_type = fields.Field(
         column_name='Transaction Type',
         attribute='transaction_type',
         widget=widgets.ForeignKeyWidget(StockTransactionType, 'name')
     )
-    
+
     currency = fields.Field(
         column_name='Currency of Amount',
         attribute='currency',
@@ -127,7 +135,7 @@ class StockTransactionSource(resources.ModelResource):
         stock_identifier = row.get('Symbol')
         if not stock_identifier:
             raise ValueError("Stock identifier (Symbol) is missing in the import row.")
-        
+
         stock_exists = Stock.objects.filter(symbol=stock_identifier).exists()
         if not stock_exists:
             raise ValueError(f'Stock with symbol "{stock_identifier}" does not exist. '

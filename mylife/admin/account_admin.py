@@ -35,7 +35,7 @@ class AccountAdmin(admin.ModelAdmin):
     list_display = ('name', 'account_no', 'bank', 'type', 'is_active')
     search_fields = ('name', 'account_no', 'bank', 'type__name')
     autocomplete_fields = ('type',)
-    ordering = ('name', )
+    ordering = ('name',)
 
 
 class AccountHistoryInlineFormSet(BaseInlineFormSet):
@@ -85,30 +85,34 @@ class AccountHistoryInline(admin.TabularInline):
 
 @admin.register(History)
 class HistoryAdmin(admin.ModelAdmin):
-    inlines = (AccountHistoryInline, )
+    inlines = (AccountHistoryInline,)
     list_display = ('date', 'existing_total',
                     'investment_total', 'total',
                     'wire_transfer_total',)
-    ordering = ('-date', )
+    ordering = ('-date',)
     change_list_template = 'admin/mylife/history/change_list.html'
 
     def total(self, obj):
         return intcomma(obj.sum)
+
     total.short_description = 'Total'
     total.admin_order_field = 'sum'
 
     def wire_transfer_total(self, obj):
         return intcomma(obj.wire_transfer_sum)
+
     wire_transfer_total.admin_order_field = 'wire_transfer_sum'
     wire_transfer_total.short_description = 'Wire Transfer Total'
 
     def investment_total(self, obj):
         return intcomma(obj.investment_sum)
+
     investment_total.admin_order_field = 'investment_sum'
     investment_total.short_description = 'Investment Total'
 
     def existing_total(self, obj):
         return intcomma(obj.existing_sum)
+
     existing_total.admin_order_field = 'existing_sum'
     existing_total.short_description = 'Net Worth'
 

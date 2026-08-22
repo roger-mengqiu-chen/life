@@ -50,7 +50,7 @@ class Merchant(models.Model):
 
     def __str__(self):
         return self.name
-    
+
 
 class Currency(models.Model):
     code = models.CharField(max_length=10, unique=True)
@@ -74,8 +74,8 @@ class CurrencyHistory(models.Model):
                                     name='unique_currency_date'),
         ]
         verbose_name_plural = "Currency Histories"
-    
-    
+
+
 class Person(models.Model):
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100,

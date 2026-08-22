@@ -27,13 +27,13 @@ class Stock(models.Model):
 
     def __str__(self):
         return self.symbol
-    
+
     def save(self, *args, **kwargs):
         if self.id is None:
             # If the stock is new, we don't have any transactions yet, so we can skip calculations
             super().save(*args, **kwargs)
             return
-        
+
         # 1. Fetch all transactions ordered chronologically by date
         transactions = self.stocktransaction_set.all().order_by('date', 'id')
 
@@ -42,7 +42,7 @@ class Stock(models.Model):
         running_total_cost_pool = Decimal('0.00')
         running_avg_cost = Decimal('0.00')
         total_realized_earnings = Decimal('0.00')
-        
+
         total_bought_accumulator = Decimal('0.00')
         total_sold_accumulator = Decimal('0.00')
 
@@ -51,7 +51,7 @@ class Stock(models.Model):
             qty = Decimal(str(tx.qty))
             price = Decimal(str(tx.price))
             commission = Decimal(str(tx.commission))
-            
+
             # Use tx.cost if available, otherwise calculate it safely
             # Note: total transaction outlay (including commission)
             tx_cost = tx.cost if tx.cost else (qty * price + commission)
@@ -60,7 +60,7 @@ class Stock(models.Model):
                 running_qty += qty
                 running_total_cost_pool += tx_cost
                 total_bought_accumulator += tx_cost
-                
+
                 # Recalculate average cost on Buy
                 if running_qty > 0:
                     running_avg_cost = running_total_cost_pool / running_qty
@@ -92,7 +92,7 @@ class Stock(models.Model):
         self.average_cost = running_avg_cost
         self.earned = total_realized_earnings
         self.total_market_value = self.total_qty * self.current_price
-        
+
         # Keep track of absolute gross money flows if desired
         self.total_bought = total_bought_accumulator
         self.total_sold = total_sold_accumulator
@@ -135,7 +135,7 @@ class StockTransaction(models.Model):
     note = models.TextField(blank=True, null=True)
     news = models.ManyToManyField(News, blank=True)
     transaction_type = models.ForeignKey(
-        StockTransactionType, on_delete=models.PROTECT, blank=True, null=True)    
+        StockTransactionType, on_delete=models.PROTECT, blank=True, null=True)
 
     def __str__(self):
         return f'{self.stock}: {self.qty} {self.date}'
@@ -143,4 +143,4 @@ class StockTransaction(models.Model):
     def save(self, *args, **kwargs):
         self.cost = self.qty * self.price + self.commission
         super().save(*args, **kwargs)
-        self.stock.save() 
+        self.stock.save()

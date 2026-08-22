@@ -1,6 +1,7 @@
 import logging
 import os
 from pathlib import Path
+
 from django.apps import AppConfig
 from django.db.backends.signals import connection_created
 

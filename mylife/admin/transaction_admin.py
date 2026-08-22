@@ -153,7 +153,7 @@ class MultiFormatDateWidget(DateWidget):
                 return datetime.strptime(value.strip(), fmt).date()
             except (ValueError, TypeError):
                 continue
-                
+
         return super().clean(value, row, **kwargs)
 
 
@@ -163,7 +163,7 @@ class TransactionSource(resources.ModelResource):
         attribute='transaction_time',
         widget=MultiFormatDateWidget()
     )
-    
+
     merchant = fields.Field(
         column_name='merchant',
         attribute='merchant',

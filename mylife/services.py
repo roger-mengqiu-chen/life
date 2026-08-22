@@ -1,10 +1,9 @@
-from django.db import connection
 import pandas
-
-from django.conf import settings
-
-from .models import Transaction, History, Investment, Currency, CurrencyHistory
 import requests
+from django.conf import settings
+from django.db import connection
+
+from .models import Transaction, History, Currency, CurrencyHistory
 
 
 def get_trans_df(request):
@@ -68,33 +67,28 @@ def get_histories():
 
 def get_investment_by_account_due_date():
     query = '''
-        SELECT ma.name AS account__name, due_date, amount, exchange_rate
-        FROM mylife_investment mi 
-        LEFT JOIN mylife_currency mc ON mi.currency_id = mc.id 
-        LEFT JOIN mylife_account ma ON mi.account_id = ma.id
-        LEFT JOIN (
-            WITH RankedRates AS (
-                SELECT 
-                    currency_id,
-                    exchange_rate,
-                    date,
-                    ROW_NUMBER() OVER (
-                        PARTITION BY currency_id 
-                        ORDER BY date DESC
-                    ) AS RowNum
-                FROM 
-                    mylife_currencyhistory mc2
-            )
-            SELECT 
-                currency_id,
-                exchange_rate,
-                date
-            FROM 
+            SELECT ma.name AS account__name, due_date, amount, exchange_rate
+            FROM mylife_investment mi
+                     LEFT JOIN mylife_currency mc ON mi.currency_id = mc.id
+                     LEFT JOIN mylife_account ma ON mi.account_id = ma.id
+                     LEFT JOIN (WITH RankedRates AS (SELECT currency_id,
+                                                            exchange_rate,
+                                    date
+                                   , ROW_NUMBER() OVER (
+                                    PARTITION BY currency_id
+                                    ORDER BY date DESC
+                                    ) AS RowNum
+                                FROM
+                                    mylife_currencyhistory mc2)
+            SELECT currency_id,
+                   exchange_rate, date
+            FROM
                 RankedRates
-            WHERE 
+            WHERE
                 RowNum = 1
-        ) t1 ON mc.id = t1.currency_id
-    '''
+                ) t1
+            ON mc.id = t1.currency_id \
+            '''
     values = connection.cursor().execute(query).fetchall()
     df = pandas.DataFrame(values, columns=['account__name', 'due_date', 'amount', 'exchange_rate'])
     df = df[df['due_date'].isna() == False]

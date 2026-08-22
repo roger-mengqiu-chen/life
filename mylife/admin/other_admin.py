@@ -6,7 +6,6 @@ from django.utils import timezone
 from mylife.models import (Currency, Person, EventType,
                            Event, Gender, CurrencyHistory)
 from mylife.services import get_and_save_currency_exchange_rate
-from mylife.views import get_exchange_rate
 
 admin.site.site_header = "Life"
 admin.site.site_title = "Life"
@@ -21,7 +20,7 @@ class GenderAdmin(admin.ModelAdmin):
 
     def has_module_permission(self, request):
         return False
-    
+
 
 @admin.register(Currency)
 class CurrencyAdmin(admin.ModelAdmin):
@@ -77,7 +76,7 @@ class EventAdmin(admin.ModelAdmin):
     search_fields = ('event_time', 'event_type__name', 'name', 'location__city',
                      'location__state', 'location__country')
     autocomplete_fields = ('event_type', 'location', 'people')
-    ordering = ('-event_time', )
+    ordering = ('-event_time',)
 
     @admin.display(description='Event time', ordering='event_time')
     def event_time_date(self, obj):

@@ -1,5 +1,6 @@
 import os
 from pathlib import Path
+
 from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -55,7 +56,6 @@ STATICFILES_FINDERS = [
 PLOTLY_DASH = {
     "serve_locally": True,  # Ensures it looks for the local plotly.min.js
 }
-
 
 ROOT_URLCONF = 'life.urls'
 
