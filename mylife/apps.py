@@ -22,8 +22,3 @@ def load_sqlite_extension(connection, **kwargs):
 class MyLifeConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
     name = 'mylife'
-
-    def ready(self):
-        connection_created.connect(load_sqlite_extension)
-        # Import plotly_app after Django is fully loaded
-        from .dashboard import dashboard  # noqa
