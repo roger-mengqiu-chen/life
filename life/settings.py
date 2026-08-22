@@ -18,8 +18,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
-STATIC_URL = '/static/'
-STATIC_ROOT = f'{BASE_DIR}/staticfiles/'
+STATIC_URL = 'static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -108,9 +108,6 @@ USE_I18N = True
 USE_TZ = True
 
 X_FRAME_OPTIONS = 'SAMEORIGIN'
-
-STATIC_URL = 'static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
