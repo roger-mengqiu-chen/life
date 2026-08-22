@@ -196,9 +196,9 @@ class TransactionSource(resources.ModelResource):
         return name
 
     def before_import_row(self, row, **kwargs):
-        transaction_type_name = row.get('transaction_type', None)
-        merchant_name = row.get('merchant', None)
-        category_name = row.get('category', None)
+        transaction_type_name = row.get('transaction_type', '')
+        merchant_name = row.get('merchant', '')
+        category_name = row.get('category', '')
 
         if transaction_type_name:
             transaction_type_name = transaction_type_name.title()
