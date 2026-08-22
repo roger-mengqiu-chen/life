@@ -14,13 +14,17 @@ class Stock(models.Model):
     symbol = models.CharField(max_length=50, unique=True)
     sector = models.ForeignKey(Sector, on_delete=models.CASCADE)
     current_price = models.DecimalField(max_digits=10, decimal_places=2)
-    total_qty = models.DecimalField(default=0, max_digits=20, blank=True, decimal_places=2)
-    total_market_value = models.DecimalField(default=0, max_digits=20, blank=True, decimal_places=2)
+    total_qty = models.DecimalField(default=0, max_digits=20, blank=True,
+                                    decimal_places=2)
+    total_market_value = models.DecimalField(default=0, max_digits=20, blank=True,
+                                             decimal_places=2)
     total_bought = models.DecimalField(default=0, max_digits=20, decimal_places=2)
     average_cost = models.DecimalField(default=0, max_digits=20, decimal_places=2)
     earned = models.DecimalField(default=0, max_digits=20, decimal_places=2)
     total_sold = models.DecimalField(default=0, max_digits=20, decimal_places=2)
-    currency = models.ForeignKey('mylife.Currency', on_delete=models.PROTECT, blank=True, null=True)
+    currency = models.ForeignKey(
+        'mylife.Currency', on_delete=models.PROTECT, blank=True, null=True
+    )
 
     class Media:
         js = ('js/investment_journal.js',)
@@ -30,7 +34,8 @@ class Stock(models.Model):
 
     def save(self, *args, **kwargs):
         if self.id is None:
-            # If the stock is new, we don't have any transactions yet, so we can skip calculations
+            # If the stock is new, we don't have any transactions yet,
+            # so we can skip calculations
             super().save(*args, **kwargs)
             return
 
@@ -130,7 +135,9 @@ class StockTransaction(models.Model):
     commission = models.DecimalField(default=0, max_digits=20, decimal_places=2)
     cost = models.DecimalField(default=0, max_digits=20, decimal_places=2)
     exchange_rate = models.DecimalField(default=1, max_digits=20, decimal_places=6)
-    currency = models.ForeignKey('mylife.Currency', on_delete=models.PROTECT, blank=True, null=True)
+    currency = models.ForeignKey(
+        'mylife.Currency', on_delete=models.PROTECT, blank=True, null=True
+    )
     fear_level = models.IntegerField(default=0, blank=True, null=True)
     note = models.TextField(blank=True, null=True)
     news = models.ManyToManyField(News, blank=True)

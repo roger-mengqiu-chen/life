@@ -10,9 +10,10 @@ from mylife.models import TransactionCategory
 def get_category_data():
     """Fetch and calculate category data with percentages"""
     try:
-        categories_data = TransactionCategory.objects.filter(transaction__transaction_type__is_expense=True).annotate(
-            total=Sum('transaction__amount')
-        ).values('name', 'total').order_by('-total')
+        categories_data = TransactionCategory.objects.filter(
+            transaction__transaction_type__is_expense=True
+        ).annotate(total=Sum('transaction__amount')
+                   ).values('name', 'total').order_by('-total')
 
         # Calculate total and build data with percentages
         total_sum = sum(item['total'] or 0 for item in categories_data)
@@ -35,18 +36,27 @@ app = DjangoDash('SimpleExample')
 
 app.layout = html.Div([
     html.Div([
-        html.Button('Clear Selection', id='clear-selection-btn', n_clicks=0, style={'marginBottom': '12px'}),
+        html.Button(
+            'Clear Selection',
+            id='clear-selection-btn',
+            n_clicks=0,
+            style={'marginBottom': '12px'}
+        ),
         html.Div([
             html.Div([
                 dash_table.DataTable(
                     id='category-table',
                     columns=[
                         {'name': 'Category', 'id': 'Category'},
-                        {'name': 'Total', 'id': 'Total', 'type': 'numeric', 'format': {'specifier': ',.2f'}},
+                        {'name': 'Total',
+                         'id': 'Total',
+                         'type': 'numeric',
+                         'format': {'specifier': ',.2f'}},
                         {'name': 'Percentage', 'id': 'Percentage'}
                     ],
                     style_table={'width': '100%', 'minWidth': '100%'},
-                    style_cell={'textAlign': 'left', 'padding': '10px', 'fontFamily': 'sans-serif'},
+                    style_cell={'textAlign': 'left', 'padding': '10px',
+                                'fontFamily': 'sans-serif'},
                     style_data_conditional=[
                         {
                             'if': {'row_index': 'odd'},
@@ -66,11 +76,28 @@ app.layout = html.Div([
                 'paddingRight': '8px',
             }),
             dcc.Graph(id='category-pie', style={'flex': '2', 'height': '100%'}),
-        ], style={'display': 'flex', 'flexDirection': 'row', 'width': '100%', 'alignItems': 'flex-start',
-                  'gap': '24px'}),
-    ], style={'flex': '1', 'minHeight': '0', 'display': 'flex', 'flexDirection': 'column', 'overflowY': 'auto'}),
+        ], style={
+            'display': 'flex',
+            'flexDirection': 'row',
+            'width': '100%',
+            'alignItems': 'flex-start',
+            'gap': '24px'
+        }),
+    ], style={
+        'flex': '1',
+        'minHeight': '0',
+        'display': 'flex',
+        'flexDirection': 'column',
+        'overflowY': 'auto'
+    }),
     dcc.Store(id='store'),
-], style={'display': 'flex', 'flexDirection': 'column', 'height': '100%', 'width': '100%', 'overflowY': 'auto'})
+], style={
+    'display': 'flex',
+    'flexDirection': 'column',
+    'height': '100%',
+    'width': '100%',
+    'overflowY': 'auto'
+})
 
 
 # Callback to update table and pie chart

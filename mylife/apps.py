@@ -20,13 +20,15 @@ def load_sqlite_extension(connection, **kwargs):
         try:
             raw_connection.enable_load_extension(True)
             raw_connection.load_extension(extension_path)
-            raw_connection.enable_load_extension(False)  # Turn off after loading for security
+            # Turn off after loading for security
+            raw_connection.enable_load_extension(False)
         except Exception as e:
             logger.warning(f"Could not load SQLite extension '{extension_path}': {e}")
     else:
         logger.warning(
-            "SQLite load extension is not enabled in this Python's sqlite3 build. "
-            "Install pysqlite3-binary or rebuild Python with --enable-loadable-sqlite-extensions."
+            'SQLite load extension is not enabled in this Python\'s sqlite3 build. '
+            'Install pysqlite3-binary or rebuild Python with '
+            '--enable-loadable-sqlite-extensions.'
         )
 
 

@@ -41,16 +41,20 @@ class CurrencyHistoryAdmin(admin.ModelAdmin):
     def get_urls(self):
         urls = super().get_urls()
         custom_urls = [
-            path('fetch-rates/', self.admin_site.admin_view(self.get_rate), name='currencyhistory_fetch_rates'),
+            path('fetch-rates/',
+                 self.admin_site.admin_view(self.get_rate),
+                 name='currencyhistory_fetch_rates'),
         ]
         return custom_urls + urls
 
     def get_rate(self, request):
         try:
             get_and_save_currency_exchange_rate()
-            messages.success(request, "Currency exchange rates updated successfully.")
+            messages.success(request,
+                             'Currency exchange rates updated successfully.')
         except Exception as e:
-            messages.error(request, f"Error updating currency exchange rates: {str(e)}")
+            messages.error(request,
+                           f'Error updating currency exchange rates: {str(e)}')
         return HttpResponseRedirect(request.META.get('HTTP_REFERER', '../'))
 
 

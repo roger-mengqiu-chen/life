@@ -203,8 +203,12 @@ class Investment(models.Model):
     profit_rate = models.FloatField(default=0, blank=True)
     note = models.TextField(null=True, blank=True)
     holder = models.ForeignKey(Person, on_delete=models.PROTECT, null=True, blank=True)
-    currency = models.ForeignKey(Currency, on_delete=models.PROTECT, null=True, blank=True)
-    investment_type = models.ForeignKey(InvestmentType, on_delete=models.PROTECT, null=True, blank=True)
+    currency = models.ForeignKey(
+        Currency, on_delete=models.PROTECT, null=True, blank=True
+    )
+    investment_type = models.ForeignKey(
+        InvestmentType, on_delete=models.PROTECT, null=True, blank=True
+    )
 
     def __str__(self):
         return f'{self.due_date} - {self.amount}'

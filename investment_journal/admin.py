@@ -126,8 +126,9 @@ class StockTransactionSource(resources.ModelResource):
     class Meta:
         model = StockTransaction
         # Include all the fields you want imported
-        fields = ('date', 'stock', 'qty', 'price', 'commission', 'exchange_rate', 'currency', 'transaction_type')
-        import_id_fields = []  # Empty if you don't have an ID column and rely on default behavior
+        fields = ('date', 'stock', 'qty', 'price', 'commission', 'exchange_rate',
+                  'currency', 'transaction_type')
+        import_id_fields = []
         skip_unchanged = True
         report_skipped = True
 
@@ -144,7 +145,8 @@ class StockTransactionSource(resources.ModelResource):
         if tx_type_name:
             StockTransactionType.objects.get_or_create(
                 name=tx_type_name,
-                defaults={'is_buy': tx_type_name.lower() == 'buy', 'is_sell': tx_type_name.lower() == 'sell'}
+                defaults={'is_buy': tx_type_name.lower() == 'buy',
+                          'is_sell': tx_type_name.lower() == 'sell'}
             )
 
         exchange_rate_value = row.get('Exchange Rate')
@@ -168,7 +170,8 @@ class StockTransactionTypeAdmin(admin.ModelAdmin):
 
 @admin.register(StockTransaction)
 class StockTransactionAdmin(ImportExportModelAdmin, admin.ModelAdmin):
-    list_display = ('stock', 'date', 'qty', 'price', 'cost', 'transaction_type', 'fear_level')
+    list_display = ('stock', 'date', 'qty', 'price', 'cost', 'transaction_type',
+                    'fear_level')
     autocomplete_fields = ('stock',)
     list_filter = ('stock',)
     resource_class = StockTransactionSource
