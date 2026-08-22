@@ -73,21 +73,16 @@ def get_investment_by_account_due_date():
                      LEFT JOIN mylife_account ma ON mi.account_id = ma.id
                      LEFT JOIN (WITH RankedRates AS (SELECT currency_id,
                                                             exchange_rate,
-                                    date
-                                   , ROW_NUMBER() OVER (
-                                    PARTITION BY currency_id
-                                    ORDER BY date DESC
-                                    ) AS RowNum
-                                FROM
-                                    mylife_currencyhistory mc2)
-            SELECT currency_id,
-                   exchange_rate, date
-            FROM
-                RankedRates
-            WHERE
-                RowNum = 1
-                ) t1
-            ON mc.id = t1.currency_id \
+                                                            date,
+                                                            ROW_NUMBER() OVER (
+                                                                PARTITION BY currency_id
+                                                                ORDER BY date DESC
+                                                                ) AS RowNum
+                                                     FROM mylife_currencyhistory mc2)
+                                SELECT currency_id, exchange_rate, date
+                                FROM RankedRates
+                                WHERE RowNum = 1) t1
+                               ON mc.id = t1.currency_id
             '''
     values = connection.cursor().execute(query).fetchall()
     df = pandas.DataFrame(values, columns=['account__name', 'due_date', 'amount', 'exchange_rate'])
@@ -119,7 +114,8 @@ def get_utility_df_for_queryset(queryset):
 
 
 def get_and_save_currency_exchange_rate():
-    url = f'https://v6.exchangerate-api.com/v6/{settings.EXCHANGE_RATE_API_KEY}/latest/USD'
+    key = settings.EXCHANGE_RATE_API_KEY
+    url = f'https://v6.exchangerate-api.com/v6/{key}/latest/USD'
     response = requests.get(url)
     if response.status_code == 200:
         data = response.json()
@@ -129,7 +125,6 @@ def get_and_save_currency_exchange_rate():
             currencies = Currency.objects.all()
             for currency in currencies:
                 if currency.code in rates:
-                    currency.exchange_rate = rates[currency.code]
                     CurrencyHistory.objects.update_or_create(
                         currency=currency,
                         date=pandas.Timestamp(date, unit='s').date(),
