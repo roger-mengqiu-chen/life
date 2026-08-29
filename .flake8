@@ -1,3 +1,4 @@
 [flake8]
 exclude = .git,__pycache,.venv,venv,migrations,settings.py
 max-line-length = 88
+inline-quotes = single

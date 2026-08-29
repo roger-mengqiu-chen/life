@@ -13,7 +13,7 @@ jobs:
     strategy:
       max-parallel: 4
       matrix:
-        python-version: ['3.12']
+        python-version: ['3.12', '3.13', '3.14']
 
     steps:
     - uses: actions/checkout@v4
@@ -25,6 +25,10 @@ jobs:
     - name: Install pkg
       run: |
         pip install -r requirements.txt
+
+    - name: Flake8 Lint
+      run: |
+        flake8
 
     - name: Run Tests
       run: |

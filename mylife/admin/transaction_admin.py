@@ -1,5 +1,3 @@
-from datetime import datetime
-
 from django.conf import settings
 from django.contrib import admin
 from django.contrib.humanize.templatetags.humanize import intcomma
@@ -7,9 +5,10 @@ from django.forms import ModelForm, TextInput
 from django.shortcuts import render
 from import_export import resources, fields
 from import_export.admin import ImportExportModelAdmin
-from import_export.widgets import DateWidget, ForeignKeyWidget
+from import_export.widgets import ForeignKeyWidget
 from rangefilter.filters import DateRangeFilter
 
+from mylife.admin.widgets import MultiFormatDateWidget
 from mylife.models import (
     TransactionType,
     TransactionCategory,
@@ -141,29 +140,13 @@ class TransactionCategoryAdmin(admin.ModelAdmin):
     inlines = [TransactionInline]
 
 
-class MultiFormatDateWidget(DateWidget):
-    def clean(self, value, row=None, **kwargs):
-        if not value:
-            return None
-
-        formats = settings.TRANSACTION_TIME_FORMAT
-
-        for fmt in formats:
-            try:
-                return datetime.strptime(value.strip(), fmt).date()
-            except (ValueError, TypeError):
-                continue
-                
-        return super().clean(value, row, **kwargs)
-
-
 class TransactionSource(resources.ModelResource):
     transaction_time = fields.Field(
         column_name='transaction_time',
         attribute='transaction_time',
         widget=MultiFormatDateWidget()
     )
-    
+
     merchant = fields.Field(
         column_name='merchant',
         attribute='merchant',
@@ -196,9 +179,9 @@ class TransactionSource(resources.ModelResource):
         return name
 
     def before_import_row(self, row, **kwargs):
-        transaction_type_name = row.get('transaction_type', None)
-        merchant_name = row.get('merchant', None)
-        category_name = row.get('category', None)
+        transaction_type_name = row.get('transaction_type', '')
+        merchant_name = row.get('merchant', '')
+        category_name = row.get('category', '')
 
         if transaction_type_name:
             transaction_type_name = transaction_type_name.title()

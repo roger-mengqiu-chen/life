@@ -1,5 +1,6 @@
 import os
 from pathlib import Path
+
 from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -8,17 +9,17 @@ load_dotenv(os.path.join(BASE_DIR, '.env'))
 LOG_DIR = os.path.join(BASE_DIR, 'logs')
 os.makedirs(LOG_DIR, exist_ok=True)
 
-SECRET_KEY = 'django-insecure-xw&5k*a5_$@ue-e*@n%(4-313r*7-u)ur#p!3x80hnmx01jngt'
+SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-xw&5k*a5_$@ue-e*@n%(4-313r*7-u)ur#p!3x80hnmx01jngt')
 
 EXCHANGE_RATE_API_KEY = os.getenv('EXCHANGE_RATE_API_KEY', '')
 GEMINI_API_KEY = os.getenv('GEMINI_API_KEY', '')
 
-DEBUG = True
+DEBUG = os.getenv('DEBUG', 'True') == 'True'
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
-STATIC_URL = '/static/'
-STATIC_ROOT = f'{BASE_DIR}/staticfiles/'
+STATIC_URL = 'static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -55,7 +56,6 @@ STATICFILES_FINDERS = [
 PLOTLY_DASH = {
     "serve_locally": True,  # Ensures it looks for the local plotly.min.js
 }
-
 
 ROOT_URLCONF = 'life.urls'
 
@@ -108,9 +108,6 @@ USE_I18N = True
 USE_TZ = True
 
 X_FRAME_OPTIONS = 'SAMEORIGIN'
-
-STATIC_URL = 'static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 

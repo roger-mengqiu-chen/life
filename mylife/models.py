@@ -50,7 +50,7 @@ class Merchant(models.Model):
 
     def __str__(self):
         return self.name
-    
+
 
 class Currency(models.Model):
     code = models.CharField(max_length=10, unique=True)
@@ -74,8 +74,8 @@ class CurrencyHistory(models.Model):
                                     name='unique_currency_date'),
         ]
         verbose_name_plural = "Currency Histories"
-    
-    
+
+
 class Person(models.Model):
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100,
@@ -203,8 +203,12 @@ class Investment(models.Model):
     profit_rate = models.FloatField(default=0, blank=True)
     note = models.TextField(null=True, blank=True)
     holder = models.ForeignKey(Person, on_delete=models.PROTECT, null=True, blank=True)
-    currency = models.ForeignKey(Currency, on_delete=models.PROTECT, null=True, blank=True)
-    investment_type = models.ForeignKey(InvestmentType, on_delete=models.PROTECT, null=True, blank=True)
+    currency = models.ForeignKey(
+        Currency, on_delete=models.PROTECT, null=True, blank=True
+    )
+    investment_type = models.ForeignKey(
+        InvestmentType, on_delete=models.PROTECT, null=True, blank=True
+    )
 
     def __str__(self):
         return f'{self.due_date} - {self.amount}'

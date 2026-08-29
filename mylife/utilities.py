@@ -1,14 +1,13 @@
+import json
 from datetime import datetime
 
 import pandas
 import plotly
 import plotly.express as px
 import plotly.graph_objects as go
-import json
 
 
 def load_pie_chart(df):
-
     pie = go.Pie(
         labels=df['label'],
         values=df['value'],
@@ -35,7 +34,8 @@ def load_pie_chart(df):
 
 def load_line_chart(df):
     year_end = df['date'].max()
-    start = datetime.strptime(year_end, '%Y-%m-%d').date() - pandas.DateOffset(years=1)
+    start = (datetime.strptime(year_end, '%Y-%m-%d').date()
+             - pandas.DateOffset(years=1))
     end = datetime.strptime(year_end, '%Y-%m-%d').date()
 
     fig = go.Figure(
@@ -65,7 +65,8 @@ def load_line_chart(df):
 
 def load_bar_chart(df):
     first_year_start = df['date'].min()
-    first_year_end = datetime.strptime(first_year_start, '%Y-%m-%d').date() + pandas.DateOffset(years=1)
+    first_year_end = (datetime.strptime(first_year_start, '%Y-%m-%d').date()
+                      + pandas.DateOffset(years=1))
     first_year_end = first_year_end.strftime('%Y-%m-%d')
     fig = px.bar(
         df,
