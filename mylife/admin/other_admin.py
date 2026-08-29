@@ -2,11 +2,11 @@ from django.contrib import admin, messages
 from django.http import HttpResponseRedirect
 from django.urls import path
 from django.utils import timezone
+from rangefilter.filters import DateRangeFilter
 
 from mylife.models import (Currency, Person, EventType,
                            Event, Gender, CurrencyHistory)
 from mylife.services import get_and_save_currency_exchange_rate
-from mylife.views import get_exchange_rate
 
 admin.site.site_header = "Life"
 admin.site.site_title = "Life"
@@ -76,6 +76,7 @@ class EventAdmin(admin.ModelAdmin):
     list_display = ('event_time_date', 'event_type', 'name', 'location', 'passed_time')
     search_fields = ('event_time', 'event_type__name', 'name', 'location__city',
                      'location__state', 'location__country')
+    list_filter = (('event_time', DateRangeFilter),)
     autocomplete_fields = ('event_type', 'location', 'people')
     ordering = ('-event_time', )
 
