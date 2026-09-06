@@ -87,3 +87,8 @@ class EventAdmin(admin.ModelAdmin):
     @admin.display(description='Event time', ordering='event_time')
     def event_time_date(self, obj):
         return timezone.localtime(obj.event_time).strftime('%Y-%m-%d')
+
+    def save_model(self, request, obj, form, change):
+        if not obj.name.strip():
+            obj.name = timezone.localtime(obj.event_time).strftime("%Y-%m-%d")
+        super().save_model(request, obj, form, change)

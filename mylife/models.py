@@ -289,9 +289,8 @@ class Event(models.Model):
                                  on_delete=models.PROTECT)
     lat = models.FloatField(null=True, blank=True)
     lng = models.FloatField(null=True, blank=True)
-    name = models.CharField(max_length=255)
-    notes = models.TextField(blank=True,
-                             null=True)
+    name = models.CharField(max_length=255, blank=True)
+    notes = models.TextField(blank=True, null=True)
     people = models.ManyToManyField(Person)
 
     def __str__(self):
