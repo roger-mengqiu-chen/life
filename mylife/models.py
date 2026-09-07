@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
 
+from dateutil.relativedelta import relativedelta
 from django.db import models
 from django.utils import timezone
 from django.utils.html import format_html
@@ -298,17 +299,17 @@ class Event(models.Model):
 
     def passed_time(self):
         now = timezone.now()
-        delta = now - self.event_time
-        total_days = delta.days
-        years = total_days // 365
-        months = (total_days % 365) // 30
-        days = (total_days % 365) % 30
+        event_time = self.event_time
+        if timezone.is_aware(now) and timezone.is_aware(event_time):
+            now = timezone.localtime(now)
+            event_time = timezone.localtime(event_time)
+        delta = relativedelta(now.date(), event_time.date())
         result = ""
-        if years > 0:
-            result += f"{years} years "
-        if months > 0:
-            result += f"{months} months "
-        result += f"{days} days "
+        if delta.years > 0:
+            result += f"{delta.years} years "
+        if delta.months > 0:
+            result += f"{delta.months} months "
+        result += f"{delta.days} days "
         return result.strip()
 
 
