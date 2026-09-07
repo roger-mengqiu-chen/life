@@ -101,7 +101,7 @@ bulk_edit_merchant.short_description = "Bulk edit merchant"
 class LocationAdmin(admin.ModelAdmin):
     list_display = ('name', 'street_no', 'street_name', 'city', 'state', 'country')
     search_fields = ('name', 'unit_no', 'building_no', 'street_no', 'street_name',
-                     'city', 'state', 'zip_code', 'country')
+                     'city', 'state', 'zip_code', 'country', 'lat', 'lng')
     ordering = ('street_no', 'street_name', 'city', 'state', 'zip_code')
 
 
