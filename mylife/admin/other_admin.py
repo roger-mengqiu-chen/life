@@ -78,6 +78,7 @@ class EventTypeAdmin(admin.ModelAdmin):
 @admin.register(Event)
 class EventAdmin(admin.ModelAdmin):
     list_display = ('event_time_date', 'event_type', 'name', 'location', 'passed_time')
+    readonly_fields = ('lat', 'lng')
     search_fields = ('event_time', 'event_type__name', 'name', 'location__city',
                      'location__state', 'location__country')
     list_filter = (('event_time', DateRangeFilter),)
@@ -87,6 +88,14 @@ class EventAdmin(admin.ModelAdmin):
     @admin.display(description='Event time', ordering='event_time')
     def event_time_date(self, obj):
         return timezone.localtime(obj.event_time).strftime('%Y-%m-%d')
+
+    @admin.display(description='Latitude', ordering='location__lat')
+    def lat(self, obj):
+        return obj.location.lat if obj and obj.location_id else None
+
+    @admin.display(description='Longitude', ordering='location__lng')
+    def lng(self, obj):
+        return obj.location.lng if obj and obj.location_id else None
 
     def save_model(self, request, obj, form, change):
         if not obj.name.strip():
