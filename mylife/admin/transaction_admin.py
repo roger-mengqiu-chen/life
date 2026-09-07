@@ -1,8 +1,12 @@
+from urllib.parse import urlencode
+
 from django.conf import settings
 from django.contrib import admin
 from django.contrib.humanize.templatetags.humanize import intcomma
 from django.forms import ModelForm, TextInput
 from django.shortcuts import render
+from django.urls import reverse
+from django.utils.html import format_html
 from import_export import resources, fields
 from import_export.admin import ImportExportModelAdmin
 from import_export.widgets import ForeignKeyWidget
@@ -101,19 +105,25 @@ class LocationAdmin(admin.ModelAdmin):
     ordering = ('street_no', 'street_name', 'city', 'state', 'zip_code')
 
 
-class TransactionInline(admin.TabularInline):
-    model = Transaction
-    extra = 1  # Number of empty rows to show for adding new transactions
-    fields = ('transaction_time', 'merchant', 'transaction_type', 'amount')
-    show_change_link = True
-
-
 @admin.register(Merchant)
 class MerchantAdmin(admin.ModelAdmin):
     list_display = ('name',)
     search_fields = ('name', 'website', 'phone', 'email', 'location__name')
     ordering = ('name',)
-    inlines = [TransactionInline]
+    readonly_fields = ('transactions',)
+
+    @admin.display(description='Transactions')
+    def transactions(self, obj):
+        if not obj or not obj.pk:
+            return 'Save this merchant to add transactions.'
+        list_url = reverse('admin:mylife_transaction_changelist')
+        add_url = reverse('admin:mylife_transaction_add')
+        return format_html(
+            '<a href="{}?{}">View transactions</a> | '
+            '<a href="{}?{}">Add transaction</a>',
+            list_url, urlencode({'merchant__id__exact': obj.pk}),
+            add_url, urlencode({'merchant': obj.pk}),
+        )
 
 
 class CategoryForm(ModelForm):
@@ -137,7 +147,20 @@ class TransactionCategoryAdmin(admin.ModelAdmin):
     form = CategoryForm
     list_display = ('name',)
     search_fields = ('name',)
-    inlines = [TransactionInline]
+    readonly_fields = ('transactions',)
+
+    @admin.display(description='Transactions')
+    def transactions(self, obj):
+        if not obj or not obj.pk:
+            return 'Save this category to add transactions.'
+        list_url = reverse('admin:mylife_transaction_changelist')
+        add_url = reverse('admin:mylife_transaction_add')
+        return format_html(
+            '<a href="{}?{}">View transactions</a> | '
+            '<a href="{}?{}">Add transaction</a>',
+            list_url, urlencode({'category__id__exact': obj.pk}),
+            add_url, urlencode({'category': obj.pk}),
+        )
 
 
 class TransactionSource(resources.ModelResource):
