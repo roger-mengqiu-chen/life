@@ -10,4 +10,5 @@ dash~=4.4.1
 plotly~=6.9.0
 django-plotly-dash~=2.5.0
 python-dotenv~=1.2.2
+python-dateutil~=2.9.0
 requests~=2.34.2
