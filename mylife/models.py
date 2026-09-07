@@ -30,8 +30,7 @@ class Location(models.Model):
         verbose_name_plural = "Location"
 
     def __str__(self):
-        return (f'{self.name or ""} {self.street_no or ""} {self.street_name or ""} '
-                f'{self.city}, {self.state or ""}, {self.country}')
+        return f'{self.lat or ""}, {self.lng or ""} {self.city or ""} {self.country}'
 
 
 class Merchant(models.Model):
