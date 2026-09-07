@@ -23,11 +23,12 @@ class Location(models.Model):
     state = models.CharField(max_length=255, null=True, blank=True)
     zip_code = models.CharField(max_length=255, null=True, blank=True)
     country = models.CharField(max_length=255, null=True, blank=True)
-    lat = models.FloatField(null=True, blank=True)
-    lng = models.FloatField(null=True, blank=True)
+    lat = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
+    lng = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
 
     class Meta:
         verbose_name_plural = "Location"
+        unique_together = ('lat', 'lng',)
 
     def __str__(self):
         return f'{self.lat or ""}, {self.lng or ""} {self.city or ""} {self.country}'
