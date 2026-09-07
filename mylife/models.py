@@ -31,7 +31,7 @@ class Location(models.Model):
         unique_together = ('lat', 'lng',)
 
     def __str__(self):
-        return f'{self.lat or ""}, {self.lng or ""} {self.city or ""} {self.country}'
+        return f'{self.name or ""} {self.lat or ""}, {self.lng or ""} {self.city or ""} {self.country}'
 
 
 class Merchant(models.Model):
