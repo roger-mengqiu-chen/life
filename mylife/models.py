@@ -120,9 +120,10 @@ class TransactionCategory(models.Model):
         return self.name
 
     def show_color(self):
-        if self.color is not None or self.color != '':
+        if self.color:
             return format_html(
-                f'<span style="color:{self.color}">&#x25A0;</span>'
+                '<span style="color:{}">&#x25A0;</span>',
+                self.color
             )
         else:
             return ''
