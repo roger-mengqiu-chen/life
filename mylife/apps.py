@@ -1,5 +1,6 @@
 import logging
 import os
+import sys
 from pathlib import Path
 
 from django.apps import AppConfig
@@ -9,7 +10,7 @@ logger = logging.getLogger(__name__)
 
 
 def load_sqlite_extension(connection, **kwargs):
-    if connection.vendor != 'sqlite':
+    if sys.platform != 'linux' or connection.vendor != 'sqlite':
         return
 
     base_dir = os.path.dirname(os.path.dirname(Path(__file__).resolve()))
