@@ -1,0 +1,37 @@
+{% extends "admin/change_list.html" %}
+
+{% block content %}
+    <div class="module" style="margin-bottom: 20px;">
+        <h2>Event map</h2>
+        {% if event_map %}
+            <p>Hover over a marker to see event titles and notes. The map follows the current search and filters.</p>
+            <div id="event-map" style="height: 500px;" aria-label="Map of event locations"></div>
+            {{ event_map|json_script:"event-map-data" }}
+            <script>
+                (() => {
+                    const figure = JSON.parse(document.getElementById('event-map-data').textContent);
+                    const width = document.getElementById('event-map').clientWidth;
+                    const points = figure.data[0];
+                    const mercatorY = lat => {
+                        const radians = Math.max(-85.051129, Math.min(85.051129, lat)) * Math.PI / 180;
+                        return Math.log(Math.tan(Math.PI / 4 + radians / 2));
+                    };
+                    const ys = points.lat.map(mercatorY);
+                    const ymin = Math.min(...ys), ymax = Math.max(...ys);
+                    const lonSpan = Math.max(...points.lon) - Math.min(...points.lon);
+                    const xFraction = Math.max(lonSpan / 360, 0.000001);
+                    const yFraction = Math.max((ymax - ymin) / (2 * Math.PI), 0.000001);
+                    figure.layout.map.center.lat = (2 * Math.atan(Math.exp((ymin + ymax) / 2)) - Math.PI / 2) * 180 / Math.PI;
+                    figure.layout.map.zoom = Math.max(0, Math.min(12,
+                        Math.log2(Math.max(width - 80, 1) / (512 * xFraction)),
+                        Math.log2(420 / (512 * yFraction))
+                    ));
+                    Plotly.newPlot('event-map', figure.data, figure.layout, {responsive: true});
+                })();
+            </script>
+        {% else %}
+            <p>No events with valid GPS coordinates match the current search and filters.</p>
+        {% endif %}
+    </div>
+    {{ block.super }}
+{% endblock %}

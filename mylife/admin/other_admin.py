@@ -7,6 +7,7 @@ from rangefilter.filters import DateRangeFilter
 from mylife.models import (Currency, Person, EventType,
                            Event, Gender, CurrencyHistory)
 from mylife.services import get_and_save_currency_exchange_rate
+from mylife.utilities import load_event_map
 
 admin.site.site_header = "Life"
 admin.site.site_title = "Life"
@@ -77,6 +78,7 @@ class EventTypeAdmin(admin.ModelAdmin):
 
 @admin.register(Event)
 class EventAdmin(admin.ModelAdmin):
+    change_list_template = 'admin/mylife/event/change_list.html'
     list_display = ('event_time_date', 'event_type', 'name', 'location', 'passed_time')
     readonly_fields = ('lat', 'lng')
     search_fields = ('event_time', 'event_type__name', 'name', 'location__city',
@@ -84,6 +86,18 @@ class EventAdmin(admin.ModelAdmin):
     list_filter = (('event_time', DateRangeFilter),)
     autocomplete_fields = ('event_type', 'location', 'people')
     ordering = ('-event_time',)
+
+    def changelist_view(self, request, extra_context=None):
+        response = super().changelist_view(request, extra_context)
+        if getattr(response, 'context_data', None) and 'cl' in response.context_data:
+            queryset = response.context_data['cl'].queryset
+            events = queryset.select_related('location').only(
+                'name', 'notes', 'event_time', 'location__lat', 'location__lng',
+            )
+            response.context_data['event_map'] = load_event_map(events)
+            # OSM requires a Referer; send only the origin to external tile servers.
+            response['Referrer-Policy'] = 'strict-origin-when-cross-origin'
+        return response
 
     @admin.display(description='Event time', ordering='event_time')
     def event_time_date(self, obj):
